@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../axios'
 import { socket } from '../../socket';
-
+import { useNavigate } from 'react-router-dom';
 type Room = {
   title: string;
 };
 const Home: React.FC = () => {
+  const navigate = useNavigate();
   const [rooms, setRooms] = useState<Room[]>([])
-  socket.connect()
+
   useEffect(() => {
     api.get('/rooms').then((res):void => {
        setRooms(res.data)
@@ -16,6 +17,7 @@ const Home: React.FC = () => {
 
   const handleJoinRoom = (roomId:string) => {
     socket.emit('joinRoom', roomId);
+    navigate(`rooms/${roomId}`)
   }
 
   return (
