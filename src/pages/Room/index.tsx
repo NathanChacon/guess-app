@@ -3,36 +3,46 @@ import { useParams } from 'react-router-dom';
 import { socket } from '../../socket';
 
 const Room = () => {
-  const { roomId } = useParams(); // Extract roomId from URL parameters
+  const { roomId } = useParams();
   const [users, setUsers] = useState<any[]>([])
   const [currentMessage, setCurrentMessage] = useState('')
+  const [messages, setMessages] = useState<any[]>([]) 
 
   useEffect(() => {
     socket.on('userJoin', (data: any) => {
         const {user: newUser} = data
-        if(!users.some((user) => user === newUser)){
-            setUsers([...users, newUser])
-        }
+        
+        setUsers((users) => {
+          if(!users.some((user) => user === newUser)){
+            return [...users, newUser]
+          }
+
+          return users
+        });
     })
+
+    socket.on('roomMessage', (data: any) => {
+        setMessages(messages => [...messages, data.message]);
+  })
 
 
     return () => {
         socket.off('useJoin')
+        socket.off('roomMessage')
     }
   }, [])
+
+
 
   const handleMessageChange = (event:any) => {
     setCurrentMessage(event.target.value);
   };
 
   const handleSendMessage = () => {
-    // Add your logic to send the message, for example, emitting a socket event
-    console.log('Sending message:', currentMessage);
     socket.emit('roomMessage', {roomId, message: currentMessage})
-    // Clear the textarea after sending the message
+    
     setCurrentMessage('');
   };
-
 
   return (
     <div>
@@ -40,7 +50,9 @@ const Room = () => {
       {users.map((user) => {
         return <div>{user}</div>
       })}
-
+        {messages.map((message) => {
+        return <div>{message}</div>
+      })}
     <div>
         <textarea
             value={currentMessage}
