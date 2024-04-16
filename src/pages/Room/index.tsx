@@ -3,6 +3,7 @@ import UserCard from './components/UserCard';
 import { useParams } from 'react-router-dom';
 import { socket } from '../../socket';
 import './style.css'
+import Message from './components/Message';
 const Room = () => {
   const { roomId } = useParams();
   const [users, setUsers] = useState<any[]>([])
@@ -11,8 +12,16 @@ const Room = () => {
 
   useEffect(() => {
     socket.on('userJoin', (data: any) => {
-        console.log(data)
         const {user: newUser} = data
+
+        console.log("user join", data)
+        setMessages((messages) => {
+          const message = {
+            text: `${newUser} entrou na sala`,
+            variant: 'success'
+          }
+          return [...messages, message]
+        })
         
         setUsers((users) => {
           if(!users.some((user) => user === newUser)){
@@ -24,13 +33,26 @@ const Room = () => {
     })
 
     socket.on('roomMessage', (data: any) => {
-        setMessages(messages => [...messages, data.message]);
+        const text = `${data.fromUser}: ${data.message}`
+        const message = {
+          text,
+          variant: "common"
+        }
+        setMessages(messages => [...messages, message]);
   })
+
+    socket.on("usersInRoom", ({usersInRoom}) => {
+      console.log("usersInRoom", usersInRoom)
+      setUsers((users) => {
+          return [...users, ...usersInRoom]
+      });
+    })
 
 
     return () => {
-        socket.off('useJoin')
+        socket.off('userJoin')
         socket.off('roomMessage')
+        socket.off("usersInRoom")
     }
   }, [])
 
@@ -46,6 +68,12 @@ const Room = () => {
     setCurrentMessage('');
   };
 
+  const handleOnKeyDown = (e:any) => {
+    if (e.key === 'Enter') {
+      handleSendMessage()
+    }
+  }
+  console.log("users", users)
   return (
     <section className='room'>
       <div className='room__board'>
@@ -56,6 +84,32 @@ const Room = () => {
                     </li>
             })}
           </ul>
+          <div className='room__play-area'>
+            <div className='room__play'>
+
+            </div>
+
+            <div className='room__chat'>
+                <ul className='room__chat-messages'>
+                    {
+                      messages.map(({text, variant}) => {
+                        return <li>
+                            <Message text={text} variant={variant}/>
+                        </li>
+                      })
+                    }
+                </ul>
+                <input
+                  type={"text"}
+                  placeholder={"escreva aqui..."}
+                  value={currentMessage}
+                  onChange={handleMessageChange}
+                  className='room__chat-input'
+                  onKeyDown={handleOnKeyDown}
+                />
+            </div>
+          </div>
+
       </div>
     </section>
   );
