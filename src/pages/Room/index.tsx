@@ -12,19 +12,21 @@ const Room = () => {
 
   useEffect(() => {
     socket.on('userJoin', (data: any) => {
-        const {user: newUser} = data
+        const newUser = {
+          userId: data?.userId,
+        }
 
         console.log("user join", data)
         setMessages((messages) => {
           const message = {
-            text: `${newUser} entrou na sala`,
+            text: `${newUser.userId} entrou na sala`,
             variant: 'success'
           }
           return [...messages, message]
         })
         
         setUsers((users) => {
-          if(!users.some((user) => user === newUser)){
+          if(!users.some((user) => user.userId === newUser.userId)){
             return [...users, newUser]
           }
 
@@ -42,10 +44,28 @@ const Room = () => {
   })
 
     socket.on("usersInRoom", ({usersInRoom}) => {
-      console.log("usersInRoom", usersInRoom)
+
       setUsers((users) => {
           return [...users, ...usersInRoom]
       });
+    })
+
+
+    socket.on("userLeave", ({userId}: any) => {
+      console.log("test", userId)
+      setMessages((messages) => {
+        const message = {
+          text: `${userId} saiu da sala`,
+          variant: 'error'
+        }
+        return [...messages, message]
+      })
+
+      setUsers((users) => {
+        const filteredUsers = users.filter((user) => user.userId !== userId)
+
+        return [...filteredUsers]
+      })
     })
 
 
@@ -53,6 +73,7 @@ const Room = () => {
         socket.off('userJoin')
         socket.off('roomMessage')
         socket.off("usersInRoom")
+        socket.off("userLeave")
     }
   }, [])
 
@@ -78,9 +99,9 @@ const Room = () => {
     <section className='room'>
       <div className='room__board'>
           <ul className='room__users'>
-            {users.map(() => {
+            {users.map(({userId, points}) => {
               return <li className='room__user'>
-                      <UserCard/>
+                      <UserCard name={userId} points={points}/>
                     </li>
             })}
           </ul>

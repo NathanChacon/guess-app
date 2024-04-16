@@ -5,6 +5,11 @@ type elipseProps = {
     height: number
 }
 
+type userProps = {
+    name: string,
+    points: number
+}
+
 const EllipseImage = ({ width, height }: elipseProps) => {
     const viewBox = `0 0 ${width} ${height}`;
     const radiusX = width / 2;
@@ -19,13 +24,13 @@ const EllipseImage = ({ width, height }: elipseProps) => {
     );
   };
 
-const UserCard = () => {
+const UserCard = ({name, points}: userProps) => {
     return (
         <div className="user-card">
             <EllipseImage width={80} height={80}/>
             <div className='user-card__info'>
-                <h4>Nathan</h4>
-                <h6>pontos: 10</h6>
+                <h4>{name}</h4>
+                <h6>pontos: {points || 0}</h6>
             </div>
         </div>
     )
