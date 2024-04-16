@@ -9,6 +9,11 @@ const Room = () => {
   const [users, setUsers] = useState<any[]>([])
   const [currentMessage, setCurrentMessage] = useState('')
   const [messages, setMessages] = useState<any[]>([]) 
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [currentPlayer, setCurrentPlayer] = useState('')
+
+
+
 
   useEffect(() => {
     socket.on('userJoin', (data: any) => {
@@ -16,7 +21,6 @@ const Room = () => {
           userId: data?.userId,
         }
 
-        console.log("user join", data)
         setMessages((messages) => {
           const message = {
             text: `${newUser.userId} entrou na sala`,
@@ -44,7 +48,6 @@ const Room = () => {
   })
 
     socket.on("usersInRoom", ({usersInRoom}) => {
-
       setUsers((users) => {
           return [...users, ...usersInRoom]
       });
@@ -52,7 +55,6 @@ const Room = () => {
 
 
     socket.on("userLeave", ({userId}: any) => {
-      console.log("test", userId)
       setMessages((messages) => {
         const message = {
           text: `${userId} saiu da sala`,
@@ -69,15 +71,29 @@ const Room = () => {
     })
 
 
+    socket.on("nextPlayer", ({userId}: any) => {
+      if(userId === socket.id){
+        setIsPlaying(() => true)
+      }
+      else{
+        setIsPlaying(() => false)
+      }
+
+
+      setCurrentPlayer(() => userId)
+    })
+
+
     return () => {
         socket.off('userJoin')
         socket.off('roomMessage')
         socket.off("usersInRoom")
         socket.off("userLeave")
+        socket.off("nextPlayer")
     }
   }, [])
 
-
+  console.log(currentPlayer)
 
   const handleMessageChange = (event:any) => {
     setCurrentMessage(event.target.value);
@@ -106,8 +122,9 @@ const Room = () => {
             })}
           </ul>
           <div className='room__play-area'>
+            <h1>{currentPlayer}</h1>
             <div className='room__play'>
-
+                <textarea disabled={!isPlaying} />
             </div>
 
             <div className='room__chat'>

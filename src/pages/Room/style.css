@@ -34,6 +34,24 @@
     height: 100%;
 }
 
+.room__play{
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    display: flex;
+}
+
+.room__play textarea{
+        width: 100%;
+        max-width: 755px;
+        height: 100%;
+        resize: none;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 20px;
+        outline: none;
+}
+
 .room__chat{
     width: 100%;
     display: flex;
