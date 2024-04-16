@@ -1,0 +1,25 @@
+.room{ 
+    width: 100vw;
+    height: 100vh;
+    background-color: #7D5388;
+    padding: 77px 102px 77px 102px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.room__board {
+    width: 100%;
+    height: 100%;
+    background-color: #A65E96;
+    border-radius: 59px;
+    padding: 36px 28px 36px 28px;
+}
+
+.room__users {
+    list-style: none;
+}
+
+.room__user{
+    margin-bottom: 40px;
+}

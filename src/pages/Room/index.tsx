@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import UserCard from './components/UserCard';
 import { useParams } from 'react-router-dom';
 import { socket } from '../../socket';
-
+import './style.css'
 const Room = () => {
   const { roomId } = useParams();
   const [users, setUsers] = useState<any[]>([])
@@ -10,6 +11,7 @@ const Room = () => {
 
   useEffect(() => {
     socket.on('userJoin', (data: any) => {
+        console.log(data)
         const {user: newUser} = data
         
         setUsers((users) => {
@@ -45,26 +47,17 @@ const Room = () => {
   };
 
   return (
-    <div>
-      <h2>Room ID: {roomId}</h2>
-      {users.map((user) => {
-        return <div>{user}</div>
-      })}
-        {messages.map((message) => {
-        return <div>{message}</div>
-      })}
-    <div>
-        <textarea
-            value={currentMessage}
-            onChange={handleMessageChange}
-            placeholder="Type your message here..."
-            rows={4}
-            cols={50}
-        />
-            <br />
-            <button onClick={handleSendMessage}>Send</button>
-        </div>
-    </div>
+    <section className='room'>
+      <div className='room__board'>
+          <ul className='room__users'>
+            {users.map(() => {
+              return <li className='room__user'>
+                      <UserCard/>
+                    </li>
+            })}
+          </ul>
+      </div>
+    </section>
   );
 };
 

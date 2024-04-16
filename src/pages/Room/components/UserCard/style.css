@@ -1,0 +1,10 @@
+.user-card{
+    color: white;
+    display: flex;
+    flex-shrink: none;
+    align-items: center;
+}
+
+.user-card__info{
+    margin-left: 10px;
+}
