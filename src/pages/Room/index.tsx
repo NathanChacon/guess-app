@@ -8,12 +8,11 @@ const Room = () => {
   const { roomId } = useParams();
   const [users, setUsers] = useState<any[]>([])
   const [currentMessage, setCurrentMessage] = useState('')
+  const [descriptionMessage, setDescriptionMessage] = useState('')
   const [messages, setMessages] = useState<any[]>([]) 
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentPlayer, setCurrentPlayer] = useState('')
-
-
-
+  const [currentTopic, setCurrentTopic] = useState('')
 
   useEffect(() => {
     socket.on('userJoin', (data: any) => {
@@ -55,11 +54,12 @@ const Room = () => {
 
 
     socket.on("userLeave", ({userId}: any) => {
+      const message = {
+        text: `${userId} saiu da sala`,
+        variant: 'error'
+      }
+
       setMessages((messages) => {
-        const message = {
-          text: `${userId} saiu da sala`,
-          variant: 'error'
-        }
         return [...messages, message]
       })
 
@@ -83,6 +83,15 @@ const Room = () => {
       setCurrentPlayer(() => userId)
     })
 
+    socket.on("roomDescription", ({description}) => {
+      setDescriptionMessage(description)
+    })
+
+    socket.on("roomTopic", ({topic}: any) => {
+      console.log("works", topic)
+      setCurrentTopic(topic)
+    })
+
 
     return () => {
         socket.off('userJoin')
@@ -90,10 +99,10 @@ const Room = () => {
         socket.off("usersInRoom")
         socket.off("userLeave")
         socket.off("nextPlayer")
+        socket.off("roomDescription")
+        socket.off("roomTopic")
     }
   }, [])
-
-  console.log(currentPlayer)
 
   const handleMessageChange = (event:any) => {
     setCurrentMessage(event.target.value);
@@ -110,7 +119,15 @@ const Room = () => {
       handleSendMessage()
     }
   }
-  console.log("users", users)
+
+
+  const onDescriptionChange = (event: any) => {
+    const description = event.target.value;
+    setDescriptionMessage(description);
+
+    socket.emit('roomDescription', {roomId, description});
+  }
+
   return (
     <section className='room'>
       <div className='room__board'>
@@ -123,8 +140,13 @@ const Room = () => {
           </ul>
           <div className='room__play-area'>
             <h1>{currentPlayer}</h1>
+            {isPlaying && <h4>Tópico: {currentTopic}</h4>}
             <div className='room__play'>
-                <textarea disabled={!isPlaying} />
+                <textarea 
+                  value={descriptionMessage}
+                  onChange={onDescriptionChange}
+                  placeholder="Type your message here..."
+                  disabled={!isPlaying} />
             </div>
 
             <div className='room__chat'>

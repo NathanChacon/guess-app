@@ -34,12 +34,19 @@
     height: 100%;
 }
 
+.room__play-area h1{
+    color: white;
+    margin-bottom: 38px;
+}
+
 .room__play{
     width: 100%;
     height: 100%;
     justify-content: center;
     display: flex;
 }
+
+
 
 .room__play textarea{
         width: 100%;
@@ -50,6 +57,7 @@
         border: 1px solid #ccc;
         border-radius: 20px;
         outline: none;
+        font-size: 20px;
 }
 
 .room__chat{
