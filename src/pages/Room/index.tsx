@@ -54,7 +54,11 @@ const Room = () => {
         setMessages(messages => [...messages, message]);
   })
 
-    socket.on("room:all-users", ({usersInRoom}) => {
+    socket.on("room:current-state", ({usersInRoom, currentDescription}) => {
+      if(currentDescription){
+        setDescriptionMessage(currentDescription)
+      }
+      console.log(currentDescription)
       setUsers((users) => {
           return [...users, ...usersInRoom]
       });
@@ -80,6 +84,7 @@ const Room = () => {
 
 
     socket.on("room:next-match", (data: User) => {
+      console.log("chamado",  data)
       if(data.id === socket.id){
         setIsPlaying(() => true)
       }
@@ -95,16 +100,16 @@ const Room = () => {
       setDescriptionMessage(description)
     })
 
-    socket.on("room:topic", ({topic}: any) => {
-      console.log("works", topic)
-      setCurrentTopic(topic)
+    socket.on("room:topic", (data: any) => {
+      console.log("works", data.topic)
+      setCurrentTopic(data.topic)
     })
 
 
     return () => {
         socket.off('room:user-enter')
         socket.off('room:chat')
-        socket.off("room:all-users")
+        socket.off("room:current-state")
         socket.off("room:user-leave")
         socket.off("room:next-match")
         socket.off("room:description")
