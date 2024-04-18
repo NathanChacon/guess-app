@@ -16,7 +16,7 @@ const Home: React.FC = () => {
   }, [])
 
   const handleJoinRoom = (roomId:string) => {
-    socket.emit('joinRoom', roomId);
+    socket.emit('room:join', {roomId});
     navigate(`rooms/${roomId}`)
   }
 

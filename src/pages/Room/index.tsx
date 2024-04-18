@@ -4,9 +4,20 @@ import { useParams } from 'react-router-dom';
 import { socket } from '../../socket';
 import './style.css'
 import Message from './components/Message';
+
+type User = {
+  name: string,
+  roomId: string | null,
+  points: number,
+  joinTime: Date,
+  id: string
+}
+
+
 const Room = () => {
+  
   const { roomId } = useParams();
-  const [users, setUsers] = useState<any[]>([])
+  const [users, setUsers] = useState<User[]>([])
   const [currentMessage, setCurrentMessage] = useState('')
   const [descriptionMessage, setDescriptionMessage] = useState('')
   const [messages, setMessages] = useState<any[]>([]) 
@@ -15,29 +26,26 @@ const Room = () => {
   const [currentTopic, setCurrentTopic] = useState('')
 
   useEffect(() => {
-    socket.on('userJoin', (data: any) => {
-        const newUser = {
-          userId: data?.userId,
-        }
+    socket.on('room:user-enter', (data: User) => {
 
         setMessages((messages) => {
           const message = {
-            text: `${newUser.userId} entrou na sala`,
+            text: `${data.id} entrou na sala`,
             variant: 'success'
           }
           return [...messages, message]
         })
         
         setUsers((users) => {
-          if(!users.some((user) => user.userId === newUser.userId)){
-            return [...users, newUser]
+          if(!users.some((user) => user.id === data.id)){
+            return [...users, data]
           }
 
           return users
         });
     })
 
-    socket.on('roomMessage', (data: any) => {
+    socket.on('room:chat', (data: any) => {
         const text = `${data.fromUser}: ${data.message}`
         const message = {
           text,
@@ -46,16 +54,16 @@ const Room = () => {
         setMessages(messages => [...messages, message]);
   })
 
-    socket.on("usersInRoom", ({usersInRoom}) => {
+    socket.on("room:all-users", ({usersInRoom}) => {
       setUsers((users) => {
           return [...users, ...usersInRoom]
       });
     })
 
 
-    socket.on("userLeave", ({userId}: any) => {
+    socket.on("room:user-leave", (data: User) => {
       const message = {
-        text: `${userId} saiu da sala`,
+        text: `${data.id} saiu da sala`,
         variant: 'error'
       }
 
@@ -64,15 +72,15 @@ const Room = () => {
       })
 
       setUsers((users) => {
-        const filteredUsers = users.filter((user) => user.userId !== userId)
+        const filteredUsers = users.filter((user) => user.id !== data.id)
 
         return [...filteredUsers]
       })
     })
 
 
-    socket.on("nextPlayer", ({userId}: any) => {
-      if(userId === socket.id){
+    socket.on("room:next-match", (data: User) => {
+      if(data.id === socket.id){
         setIsPlaying(() => true)
       }
       else{
@@ -80,27 +88,27 @@ const Room = () => {
       }
 
 
-      setCurrentPlayer(() => userId)
+      setCurrentPlayer(() => data.id)
     })
 
-    socket.on("roomDescription", ({description}) => {
+    socket.on("room:description", ({description}) => {
       setDescriptionMessage(description)
     })
 
-    socket.on("roomTopic", ({topic}: any) => {
+    socket.on("room:topic", ({topic}: any) => {
       console.log("works", topic)
       setCurrentTopic(topic)
     })
 
 
     return () => {
-        socket.off('userJoin')
-        socket.off('roomMessage')
-        socket.off("usersInRoom")
-        socket.off("userLeave")
-        socket.off("nextPlayer")
-        socket.off("roomDescription")
-        socket.off("roomTopic")
+        socket.off('room:user-enter')
+        socket.off('room:chat')
+        socket.off("room:all-users")
+        socket.off("room:user-leave")
+        socket.off("room:next-match")
+        socket.off("room:description")
+        socket.off("room:topic")
     }
   }, [])
 
@@ -109,7 +117,7 @@ const Room = () => {
   };
 
   const handleSendMessage = () => {
-    socket.emit('roomMessage', {roomId, message: currentMessage})
+    socket.emit('room:chat', {roomId, message: currentMessage})
     
     setCurrentMessage('');
   };
@@ -125,16 +133,16 @@ const Room = () => {
     const description = event.target.value;
     setDescriptionMessage(description);
 
-    socket.emit('roomDescription', {roomId, description});
+    socket.emit('room:description', {roomId, description});
   }
 
   return (
     <section className='room'>
       <div className='room__board'>
           <ul className='room__users'>
-            {users.map(({userId, points}) => {
+            {users.map(({id, points}) => {
               return <li className='room__user'>
-                      <UserCard name={userId} points={points}/>
+                      <UserCard name={id} points={points}/>
                     </li>
             })}
           </ul>
