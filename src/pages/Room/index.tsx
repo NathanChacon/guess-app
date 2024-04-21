@@ -22,8 +22,9 @@ const Room = () => {
   const [descriptionMessage, setDescriptionMessage] = useState('')
   const [messages, setMessages] = useState<any[]>([]) 
   const [isPlaying, setIsPlaying] = useState(false)
-  const [currentPlayer, setCurrentPlayer] = useState('')
-  const [currentTopic, setCurrentTopic] = useState('')
+  const [currentPlayer, setCurrentPlayer] = useState<string | null>('')
+  const [currentTopic, setCurrentTopic] = useState<string | null>('')
+  const [timer, setTimer] = useState(null)
 
   useEffect(() => {
     socket.on('room:user-enter', (data: User) => {
@@ -46,7 +47,7 @@ const Room = () => {
     })
 
     socket.on('room:chat', (data: any) => {
-        const text = `${data.fromUser}: ${data.message}`
+        const text = `${data.fromUser.id}: ${data.message}`
         const message = {
           text,
           variant: "common"
@@ -58,7 +59,7 @@ const Room = () => {
       if(currentDescription){
         setDescriptionMessage(currentDescription)
       }
-      console.log(currentDescription)
+
       setUsers((users) => {
           return [...users, ...usersInRoom]
       });
@@ -84,7 +85,6 @@ const Room = () => {
 
 
     socket.on("room:next-match", (data: User) => {
-      console.log("chamado",  data)
       if(data.id === socket.id){
         setIsPlaying(() => true)
       }
@@ -101,8 +101,26 @@ const Room = () => {
     })
 
     socket.on("room:topic", (data: any) => {
-      console.log("works", data.topic)
       setCurrentTopic(data.topic)
+    })
+
+    socket.on("room:stop", (data: any) => {
+      setCurrentTopic(null)
+      setCurrentPlayer(null)
+    })
+
+    socket.on("room:timer", (data: any) => {
+      if(data && data > 0){
+        setTimer(data)
+      }
+      else{
+        setTimer(null)
+      }
+    })
+
+
+    socket.on("room:score", (data: any) => {
+      console.log("test", data)
     })
 
 
@@ -114,6 +132,7 @@ const Room = () => {
         socket.off("room:next-match")
         socket.off("room:description")
         socket.off("room:topic")
+        socket.off("room:timer")
     }
   }, [])
 
@@ -144,6 +163,8 @@ const Room = () => {
   return (
     <section className='room'>
       <div className='room__board'>
+        {timer &&  <span className='room__board-timer'>{timer}</span>}
+       
           <ul className='room__users'>
             {users.map(({id, points}) => {
               return <li className='room__user'>
@@ -152,7 +173,7 @@ const Room = () => {
             })}
           </ul>
           <div className='room__play-area'>
-            <h1>{currentPlayer}</h1>
+            {currentPlayer && <h1>{currentPlayer}</h1>}
             {isPlaying && <h4>Tópico: {currentTopic}</h4>}
             <div className='room__play'>
                 <textarea 
