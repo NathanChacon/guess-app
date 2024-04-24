@@ -55,9 +55,16 @@ const Room = () => {
         setMessages(messages => [...messages, message]);
   })
 
-    socket.on("room:current-state", ({usersInRoom, currentDescription}) => {
+    socket.on("room:current-state", ({usersInRoom, currentDescription, currentPlayer}) => {
+
+      console.log("test", currentPlayer, currentDescription)
+      
       if(currentDescription){
         setDescriptionMessage(currentDescription)
+      }
+
+      if(currentPlayer){
+        setCurrentPlayer(currentPlayer.id)
       }
 
       setUsers((users) => {
