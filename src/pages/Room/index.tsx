@@ -4,144 +4,34 @@ import { useParams } from 'react-router-dom';
 import { socket } from '../../socket';
 import './style.css'
 import Message from './components/Message';
-
-type User = {
-  name: string,
-  roomId: string | null,
-  points: number,
-  joinTime: Date,
-  id: string
-}
-
+import useMessages from './hooks/useMessages';
+import useUsers from './hooks/useUsers';
+import useRoom from './hooks/useRoom';
 
 const Room = () => {
   
   const { roomId } = useParams();
-  const [users, setUsers] = useState<User[]>([])
   const [currentMessage, setCurrentMessage] = useState('')
-  const [descriptionMessage, setDescriptionMessage] = useState('')
-  const [messages, setMessages] = useState<any[]>([]) 
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [currentPlayer, setCurrentPlayer] = useState<string | null>('')
-  const [currentTopic, setCurrentTopic] = useState<string | null>('')
-  const [timer, setTimer] = useState(null)
-
-  useEffect(() => {
-    socket.on('room:user-enter', (data: User) => {
-
-        setMessages((messages) => {
-          const message = {
-            text: `${data.id} entrou na sala`,
-            variant: 'success'
-          }
-          return [...messages, message]
-        })
-        
-        setUsers((users) => {
-          if(!users.some((user) => user.id === data.id)){
-            return [...users, data]
-          }
-
-          return users
-        });
-    })
-
-    socket.on('room:chat', (data: any) => {
-        const text = `${data.fromUser.id}: ${data.message}`
-        const message = {
-          text,
-          variant: "common"
-        }
-        setMessages(messages => [...messages, message]);
-  })
-
-    socket.on("room:current-state", ({usersInRoom, currentDescription, currentPlayer}) => {
-
-      console.log("test", currentPlayer, currentDescription)
-      
-      if(currentDescription){
-        setDescriptionMessage(currentDescription)
-      }
-
-      if(currentPlayer){
-        setCurrentPlayer(currentPlayer.id)
-      }
-
-      setUsers((users) => {
-          return [...users, ...usersInRoom]
-      });
-    })
 
 
-    socket.on("room:user-leave", (data: User) => {
-      const message = {
-        text: `${data.id} saiu da sala`,
-        variant: 'error'
-      }
+  const {
+    messages,
+    setMessages
+  } = useMessages()
 
-      setMessages((messages) => {
-        return [...messages, message]
-      })
+  const {
+    users,
+    setUsers
+  } = useUsers({setMessages})
 
-      setUsers((users) => {
-        const filteredUsers = users.filter((user) => user.id !== data.id)
-
-        return [...filteredUsers]
-      })
-    })
-
-
-    socket.on("room:next-match", (data: User) => {
-      if(data.id === socket.id){
-        setIsPlaying(() => true)
-      }
-      else{
-        setIsPlaying(() => false)
-      }
-
-
-      setCurrentPlayer(() => data.id)
-    })
-
-    socket.on("room:description", ({description}) => {
-      setDescriptionMessage(description)
-    })
-
-    socket.on("room:topic", (data: any) => {
-      setCurrentTopic(data.topic)
-    })
-
-    socket.on("room:stop", (data: any) => {
-      setCurrentTopic(null)
-      setCurrentPlayer(null)
-    })
-
-    socket.on("room:timer", (data: any) => {
-      if(data && data > 0){
-        setTimer(data)
-      }
-      else{
-        setTimer(null)
-      }
-    })
-
-
-    socket.on("room:score", (data: any) => {
-      console.log("test", data)
-    })
-
-
-    return () => {
-        socket.off('room:user-enter')
-        socket.off('room:chat')
-        socket.off("room:current-state")
-        socket.off("room:user-leave")
-        socket.off("room:next-match")
-        socket.off("room:description")
-        socket.off("room:topic")
-        socket.off("room:timer")
-    }
-  }, [])
+  const {
+    timer,
+    descriptionMessage,
+    setDescriptionMessage,
+    currentPlayer,
+    currentTopic,
+    isPlaying
+  } = useRoom({setUsers})
 
   const handleMessageChange = (event:any) => {
     setCurrentMessage(event.target.value);

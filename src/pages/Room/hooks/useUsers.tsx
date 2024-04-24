@@ -63,7 +63,8 @@ const useUsers = ({setMessages}: {setMessages: Dispatch<SetStateAction<Array<Mes
 
 
     return {
-        users
+        users,
+        setUsers
     }
 
 }
