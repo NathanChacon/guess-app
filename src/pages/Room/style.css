@@ -30,7 +30,6 @@
     list-style: none;
     padding: 0;
     margin: 0;
-    overflow-y: auto;
 }
 
 .room__user{
@@ -46,9 +45,16 @@
     height: 100%;
 }
 
-.room__play-area h1{
+.room__player-title{
     color: white;
-    margin-bottom: 38px;
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.room__topic{
+    color: white;
+    font-size: 20px;
+    margin-bottom: 10px;
 }
 
 .room__play{
@@ -120,11 +126,15 @@
     .room__users{
         display: flex;
         align-items: start;
+        overflow-y: hidden;
+        overflow-x: auto;
+        margin-bottom: 10px;
+
     }
 
     .room__user{
         margin-bottom: 0px;
-        margin-right: 40px;
+        margin-right: 20px;
     }
 
     .room__play-area{ 
@@ -135,5 +145,16 @@
         height: 90px;
     }
     
+
+    .room__player-title{
+        font-size: 18px;
+    }
+
+    
+    .room__topic{
+            color: white;
+            font-size: 14px;
+            margin-bottom: 10px;
+    }
   }
 

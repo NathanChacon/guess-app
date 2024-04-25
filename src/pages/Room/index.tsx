@@ -70,8 +70,8 @@ const Room = () => {
             })}
           </ul>
           <div className='room__play-area'>
-            {currentPlayer && <h1>{currentPlayer}</h1>}
-            {isPlaying && <h4>Tópico: {currentTopic}</h4>}
+            {currentPlayer && <h1 className='room__player-title'>{currentPlayer}</h1>}
+            {isPlaying && <h4 className='room__topic'>Tópico: {currentTopic}</h4>}
             <div className='room__play'>
                 <textarea 
                   value={descriptionMessage}

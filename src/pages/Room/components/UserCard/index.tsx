@@ -1,4 +1,5 @@
 import './style.css'
+import cat from '../../../../images/avatars/cat.png'
 
 type elipseProps = {
     width: number,
@@ -18,7 +19,7 @@ const EllipseImage = ({ width, height }: elipseProps) => {
     const cy = radiusY;
   
     return (
-      <svg width={width} height={height} viewBox={viewBox} xmlns="http://www.w3.org/2000/svg">
+      <svg className='user-card__image' width={width} height={height} viewBox={viewBox} xmlns="http://www.w3.org/2000/svg">
         <ellipse cx={cx} cy={cy} rx={radiusX} ry={radiusY} fill="white" />
       </svg>
     );
@@ -27,10 +28,12 @@ const EllipseImage = ({ width, height }: elipseProps) => {
 const UserCard = ({name, points}: userProps) => {
     return (
         <div className="user-card">
-            <EllipseImage width={80} height={80}/>
+           <div className="user-card__image">
+                <img src={cat} alt="Your Image" />
+            </div>
             <div className='user-card__info'>
                 <h4 className='user-card__title'>{name}</h4>
-                <h6>pontos: {points || 0}</h6>
+                <h6 className='user-card__subtitle'>pontos: {points || 0}</h6>
             </div>
         </div>
     )

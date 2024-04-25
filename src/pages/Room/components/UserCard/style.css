@@ -1,7 +1,6 @@
 .user-card{
     color: white;
     display: flex;
-    flex-shrink: none;
     align-items: center;
 }
 
@@ -11,9 +10,28 @@
 }
 
 .user-card__title{
+    font-size: 20px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.user-card__subtitle{
+    font-size: 14px;
+}
+
+.user-card__image{
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: 60px; /* Set the initial width */
+    height: 60px; /* Set the initial height */
+    overflow: hidden;
+    border-radius: 50%; /* Creates the ellipse shape */
+}
+
+.user-card__image img{
+    width: 100%; /* Make the image fill the container */
+    height: auto; /* Maintain aspect ratio */
 }
 
 @media screen and (max-width: 1024px) {
