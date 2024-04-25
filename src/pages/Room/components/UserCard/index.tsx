@@ -29,7 +29,7 @@ const UserCard = ({name, points}: userProps) => {
         <div className="user-card">
             <EllipseImage width={80} height={80}/>
             <div className='user-card__info'>
-                <h4>{name}</h4>
+                <h4 className='user-card__title'>{name}</h4>
                 <h6>pontos: {points || 0}</h6>
             </div>
         </div>

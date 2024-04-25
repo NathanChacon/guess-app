@@ -7,4 +7,21 @@
 
 .user-card__info{
     margin-left: 10px;
+    max-width: 150px;
 }
+
+.user-card__title{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media screen and (max-width: 1024px) {
+    .user-card{
+        flex-direction: column;
+    }
+
+    .user-card__info{
+        margin-left: 0px;
+    }
+  }
