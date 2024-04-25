@@ -156,5 +156,11 @@
             font-size: 14px;
             margin-bottom: 10px;
     }
+
+    .room__users-overflow{
+        overflow-y: hidden;
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
   }
 

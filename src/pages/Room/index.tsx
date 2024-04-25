@@ -61,14 +61,16 @@ const Room = () => {
     <section className='room'>
       <div className='room__board'>
         {timer &&  <span className='room__board-timer'>{timer}</span>}
-       
-          <ul className='room__users'>
+        <div className='room__users-overflow'>
+        <ul className='room__users'>
             {users.map(({id, points}) => {
               return <li className='room__user'>
                       <UserCard name={id} points={points}/>
                     </li>
             })}
           </ul>
+        </div>
+
           <div className='room__play-area'>
             {currentPlayer && <h1 className='room__player-title'>{currentPlayer}</h1>}
             {isPlaying && <h4 className='room__topic'>Tópico: {currentTopic}</h4>}
