@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import api from '../../axios'
 import { socket } from '../../socket';
 import { useNavigate } from 'react-router-dom';
+import RoomCard from './components/RoomCard';
+import './style.css'
+
 type Room = {
   title: string;
 };
@@ -21,27 +24,27 @@ const Home: React.FC = () => {
   }
 
   return (
-    <div>
-    <h2>Rooms:</h2>
-    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-      {rooms.map(room => (
-        <button
-          key={room?.title}
-          onClick={() => handleJoinRoom(room.title)}
-          style={{
-            border: '1px solid #ccc',
-            borderRadius: '5px',
-            padding: '10px',
-            margin: '5px',
-            cursor: 'pointer',
-            backgroundColor: '#f0f0f0',
-          }}
-        >
-          {room?.title}
-        </button>
-      ))}
+    <section className='home'>
+    <div className='home__name-section'>
+      <h1 className='home__name-title'>Seu Nome:</h1>
+      <input type="text" className="home__input" />
     </div>
-  </div>
+    <div className='home__room-section'>
+      <h1 className='home__room-title'>Salas:</h1>
+        <ul className='home__room-list'>
+        {rooms.map(room => (
+          <li className='home__room-list-item'>
+            <RoomCard
+              title={room.title}
+              description='Jogadores: 1/5'
+              onClick={() => handleJoinRoom(room.title)}
+            />
+          </li>
+
+        ))}
+        </ul>
+    </div>
+  </section>
   )
 };
 

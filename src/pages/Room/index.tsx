@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import UserCard from './components/UserCard';
 import { useParams } from 'react-router-dom';
 import { socket } from '../../socket';
