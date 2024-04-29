@@ -48,3 +48,30 @@
     outline: none;
     border: none;
 }
+
+@media screen and (min-width: 1024px) {
+    .home{
+        padding: 74px 102px 74px 102px;
+    }
+
+    .home__name-title{
+        font-size: 36px;
+    }
+
+    .home__room-title{
+        font-size: 36px;
+    }
+
+    .home__input {
+        width: 100%;
+        max-width: 374px;
+        font-size: 20px;
+        padding: 20px;
+    }
+
+    .home__room-list-item{
+        width: 100%;
+        max-width: 200px;
+    }
+    
+}   
