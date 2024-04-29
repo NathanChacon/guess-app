@@ -11,7 +11,7 @@ const useMessages = () => {
 
     useEffect(() => {
         socket.on('room:chat', (data: any) => {
-            const text = `${data.fromUser.id}: ${data.message}`
+            const text = `${data.fromUser.name}: ${data.message}`
 
             const message = {
               text,

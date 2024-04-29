@@ -22,7 +22,7 @@ const useUsers = ({setMessages}: {setMessages: Dispatch<SetStateAction<Array<Mes
 
             setMessages((messages: any) => {
               const message = {
-                text: `${data.id} entrou na sala`,
+                text: `${data.name} entrou na sala`,
                 variant: 'success'
               }
               return [...messages, message]
@@ -39,7 +39,7 @@ const useUsers = ({setMessages}: {setMessages: Dispatch<SetStateAction<Array<Mes
 
         socket.on("room:user-leave", (data: User) => {
             const message = {
-              text: `${data.id} saiu da sala`,
+              text: `${data.name} saiu da sala`,
               variant: 'error'
             }
       

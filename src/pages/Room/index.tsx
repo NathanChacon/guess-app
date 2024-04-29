@@ -56,16 +56,17 @@ const Room = () => {
 
     socket.emit('room:description', {roomId, description});
   }
-
+  
+  console.log("test", users)
   return (
     <section className='room'>
       <div className='room__board'>
         {timer &&  <span className='room__board-timer'>{timer}</span>}
         <div className='room__users-overflow'>
         <ul className='room__users'>
-            {users.map(({id, points}) => {
-              return <li className='room__user'>
-                      <UserCard name={id} points={points}/>
+            {users.map(({id, points, name}) => {
+              return <li className='room__user' key={id}>
+                      <UserCard name={name} points={points}/>
                     </li>
             })}
           </ul>

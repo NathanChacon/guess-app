@@ -8,9 +8,11 @@ import './style.css'
 type Room = {
   title: string;
 };
+
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const [rooms, setRooms] = useState<Room[]>([])
+  const [userName, setUserName] = useState('')
 
   useEffect(() => {
     api.get('/rooms').then((res):void => {
@@ -19,15 +21,20 @@ const Home: React.FC = () => {
   }, [])
 
   const handleJoinRoom = (roomId:string) => {
-    socket.emit('room:join', {roomId});
+    socket.emit('room:join', {roomId, userName});
     navigate(`rooms/${roomId}`)
   }
+
+  const handleUserNameChange = (event:any) => {
+     setUserName(event.target.value);
+  };
+
 
   return (
     <section className='home'>
     <div className='home__name-section'>
       <h1 className='home__name-title'>Seu Nome:</h1>
-      <input type="text" className="home__input" />
+      <input type="text" className="home__input" value={userName} onChange={handleUserNameChange}/>
     </div>
     <div className='home__room-section'>
       <h1 className='home__room-title'>Salas:</h1>

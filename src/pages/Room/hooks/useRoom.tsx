@@ -27,7 +27,7 @@ const useRoom =  ({setUsers}: {setUsers: Dispatch<SetStateAction<Array<User>>>})
             }
     
     
-            setCurrentPlayer(() => data.id)
+            setCurrentPlayer(() => data.name)
         })
     
         socket.on("room:description", ({description}) => {
@@ -57,10 +57,7 @@ const useRoom =  ({setUsers}: {setUsers: Dispatch<SetStateAction<Array<User>>>})
             console.log("test", data)
         })
 
-        socket.on("room:current-state", ({usersInRoom, currentDescription, currentPlayer}) => {
-
-            console.log("test", currentPlayer, currentDescription)
-            
+        socket.on("room:current-state", ({usersInRoom, currentDescription, currentPlayer}) => {            
             if(currentDescription){
               setDescriptionMessage(currentDescription)
             }
