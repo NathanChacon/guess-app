@@ -34,6 +34,12 @@
 }
 
 
+.home__input-container{
+    display: flex;
+    flex-direction: column;
+}
+
+
 
 .home__input {
     width: 100%;
@@ -43,6 +49,11 @@
     border-radius: 10px;
     outline: none;
     border: none;
+}
+
+.home__input-error {
+    padding: 10px;
+    color: red;
 }
 
 @media screen and (min-width: 1024px) {

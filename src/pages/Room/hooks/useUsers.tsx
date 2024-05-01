@@ -19,6 +19,7 @@ const useUsers = ({setMessages}: {setMessages: Dispatch<SetStateAction<Array<Mes
 
     useEffect(() => {
         socket.on('room:user-enter', (data: User) => {
+            console.log("data", data)
 
             setMessages((messages: any) => {
               const message = {

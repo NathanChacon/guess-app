@@ -1,5 +1,6 @@
 import { useEffect, useState, Dispatch, SetStateAction } from "react"
 import { socket } from "../../../socket"
+import { useParams, useLocation } from "react-router-dom";
 type User = {
     name: string,
     roomId: string | null,
@@ -17,7 +18,38 @@ const useRoom =  ({setUsers}: {setUsers: Dispatch<SetStateAction<Array<User>>>})
     const [timer, setTimer] = useState(null)
     const [descriptionMessage, setDescriptionMessage] = useState('')
 
+    const { roomId } = useParams();
+    const location = useLocation()
+
+    const userName = location.state && location.state.userName;
+    console.log(userName)
+    const handleJoinRoom = () => {
+        socket.emit('room:join', {roomId, userName}, (response: any) => {
+          if(response?.status === 200){
+            const {usersInRoom, currentDescription, currentPlayer} = response.data
+
+            if(currentDescription){
+                setDescriptionMessage(currentDescription)
+              }
+        
+              if(currentPlayer){
+                setCurrentPlayer(currentPlayer.id)
+              }
+        
+              setUsers((users) => {
+                  return [...users, ...usersInRoom]
+              });
+          }
+          else{
+            //handleErrors(response?.status)
+          }
+        });
+        
+      }
+
     useEffect(() => {
+        handleJoinRoom()
+
         socket.on("room:next-match", (data: User) => {
             if(data.id === socket.id){
                 setIsPlaying(() => true)
@@ -58,17 +90,7 @@ const useRoom =  ({setUsers}: {setUsers: Dispatch<SetStateAction<Array<User>>>})
         })
 
         socket.on("room:current-state", ({usersInRoom, currentDescription, currentPlayer}) => {            
-            if(currentDescription){
-              setDescriptionMessage(currentDescription)
-            }
-      
-            if(currentPlayer){
-              setCurrentPlayer(currentPlayer.id)
-            }
-      
-            setUsers((users) => {
-                return [...users, ...usersInRoom]
-            });
+
           })
 
       return () => {
