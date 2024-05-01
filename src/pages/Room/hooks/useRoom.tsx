@@ -89,17 +89,12 @@ const useRoom =  ({setUsers}: {setUsers: Dispatch<SetStateAction<Array<User>>>})
             console.log("test", data)
         })
 
-        socket.on("room:current-state", ({usersInRoom, currentDescription, currentPlayer}) => {            
-
-          })
-
       return () => {
         socket.off("room:next-match")
         socket.off("room:description")
         socket.off("room:topic")
         socket.off("room:timer")
         socket.off("room:score")
-        socket.off("room:current-state")
       }
     }, [])
 

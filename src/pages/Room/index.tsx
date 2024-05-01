@@ -7,6 +7,7 @@ import Message from './components/Message';
 import useMessages from './hooks/useMessages';
 import useUsers from './hooks/useUsers';
 import useRoom from './hooks/useRoom';
+import UserNameModal from './components/UserNameModal';
 
 
 const Room = () => {
@@ -57,8 +58,12 @@ const Room = () => {
 
     socket.emit('room:description', {roomId, description});
   }
-  
-  console.log("test", users)
+
+  if(true){
+    return <UserNameModal title='Escolha seu nome' subtitle='asdasdasdasd' onEnter={() => {}}/>
+  }
+
+
   return (
     <section className='room'>
       <div className='room__board'>

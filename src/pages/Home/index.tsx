@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../axios'
-import { socket } from '../../socket';
 import { useNavigate } from 'react-router-dom';
 import RoomCard from './components/RoomCard';
 import './style.css'
@@ -51,10 +50,6 @@ else if (userName.length > 10) {
        setRooms(res.data)
     })
   }, [])
-
-  const handleErrors = (status: number) => {
-
-  }
 
   const handleJoinRoom = (roomId:string) => {
     if(!userNameError){
