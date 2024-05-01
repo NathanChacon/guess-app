@@ -3,7 +3,7 @@ import './style.css'
 type UserNameModal = {
     title: string,
     subtitle: string,
-    onEnter: () => void
+    onEnter: (userName: string) => void
 }
 
 const UserNameModal = ({title, subtitle, onEnter}: UserNameModal) => {
@@ -47,12 +47,13 @@ const UserNameModal = ({title, subtitle, onEnter}: UserNameModal) => {
         handleUserNameErrors(event.target.value)
      };
 
+     const isButtonDisabled = !!userNameError || !userName
 
     return (
         <section className="user-name">
             <div className="user-name__card">
-                <h1 className="user-name__title">Escolha um nome</h1>
-                <h2 className="user-name__subtitle">asdasdasdsasd</h2>
+                <h1 className="user-name__title">{title}</h1>
+                <h2 className="user-name__subtitle">{subtitle}</h2>
                 <div className="user-name__input-container">
                     <input type="text" className="user-name__input" value={userName} onChange={handleUserNameChange}/>
                     <span className='user-name__input-error'>
@@ -61,7 +62,7 @@ const UserNameModal = ({title, subtitle, onEnter}: UserNameModal) => {
                 </div>
 
                 <div className="user-name__button-container">
-                    <button className="user-name__button">ENTRAR</button>
+                    <button className="user-name__button" disabled={isButtonDisabled} onClick={() => {onEnter(userName)}}>ENTRAR</button>
                 </div>
             </div>
         </section>

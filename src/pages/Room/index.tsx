@@ -30,6 +30,8 @@ const Room = () => {
     timer,
     descriptionMessage,
     setDescriptionMessage,
+    userNameModal,
+    handleJoinRoom,
     currentPlayer,
     currentTopic,
     isPlaying
@@ -59,8 +61,8 @@ const Room = () => {
     socket.emit('room:description', {roomId, description});
   }
 
-  if(true){
-    return <UserNameModal title='Escolha seu nome' subtitle='asdasdasdasd' onEnter={() => {}}/>
+  if(userNameModal?.isVisible){
+    return <UserNameModal title={userNameModal?.title} subtitle={userNameModal?.subtitle} onEnter={handleJoinRoom}/>
   }
 
 

@@ -17,38 +17,57 @@ const useRoom =  ({setUsers}: {setUsers: Dispatch<SetStateAction<Array<User>>>})
     const [currentTopic, setCurrentTopic] = useState<string | null>('')
     const [timer, setTimer] = useState(null)
     const [descriptionMessage, setDescriptionMessage] = useState('')
+    const [userNameModal, setUserNameModal] = useState({
+        title: "",
+        subtitle: "",
+        isVisible: false,
+    })
 
-    const { roomId } = useParams();
+    const { roomId } = useParams()
     const location = useLocation()
 
     const userName = location.state && location.state.userName;
-    console.log(userName)
-    const handleJoinRoom = () => {
-        socket.emit('room:join', {roomId, userName}, (response: any) => {
-          if(response?.status === 200){
-            const {usersInRoom, currentDescription, currentPlayer} = response.data
 
-            if(currentDescription){
-                setDescriptionMessage(currentDescription)
-              }
-        
-              if(currentPlayer){
-                setCurrentPlayer(currentPlayer.id)
-              }
-        
-              setUsers((users) => {
-                  return [...users, ...usersInRoom]
+    const handleJoinRoom = (userName: string | undefined) => {
+        if(userName){
+            socket.emit('room:join', {roomId, userName}, (response: any) => {
+                if(response?.status === 200){
+                  const {usersInRoom, currentDescription, currentPlayer} = response.data
+      
+                  if(currentDescription){
+                      setDescriptionMessage(currentDescription)
+                    }
+              
+                    if(currentPlayer){
+                      setCurrentPlayer(currentPlayer.id)
+                    }
+              
+                    setUsers((users) => {
+                        return [...users, ...usersInRoom]
+                    });
+
+                    setUserNameModal({
+                        isVisible: false,
+                        title: "",
+                        subtitle: ""
+                    })
+                }
+                else{
+                  //handleErrors(response?.status)
+                }
               });
-          }
-          else{
-            //handleErrors(response?.status)
-          }
-        });
-        
+        }
+        else{
+            setUserNameModal({
+                isVisible: true,
+                title: "Escolha um nome",
+                subtitle: "Seu nome:"
+            })
+        }
       }
 
     useEffect(() => {
-        handleJoinRoom()
+        handleJoinRoom(userName)
 
         socket.on("room:next-match", (data: User) => {
             if(data.id === socket.id){
@@ -105,6 +124,8 @@ const useRoom =  ({setUsers}: {setUsers: Dispatch<SetStateAction<Array<User>>>})
         currentPlayer,
         currentTopic,
         isPlaying,
+        userNameModal,
+        handleJoinRoom,
         setDescriptionMessage
     }
 }
