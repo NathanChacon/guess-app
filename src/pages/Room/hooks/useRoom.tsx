@@ -29,22 +29,37 @@ const useRoom =  ({setUsers}: {setUsers: Dispatch<SetStateAction<Array<User>>>})
     const initialized = useRef(false)
     const userName = location.state && location.state.userName;
 
-    const handleErrors = (status:number) => {
-        if(status === 409){
+    type ErrosMap = {
+        [key: number]: {
+            title: string
+            subtitle: string
+        }
+    }
+
+    const errorsMap: ErrosMap = {
+        401: {
+            title: "Nome inválido",
+            subtitle: "Escolha outro nome: "
+        },
+        409: {
+            title: "Esse nome já está em uso :(",
+            subtitle: "Escolha outro nome: "
+        },
+
+    }
+
+    const handleErrors = (status: number) => {
+        const errorConfig = errorsMap[status] || {title: "Ops, algo deu erroado : (", subtitle: "Tente novamente: "}
+        
+        if(status === 403){
+            return navigate('/', { state: {isRoomFull: true} })
+        }
+
+        if(errorConfig){
             setUserNameModal({
                 isVisible: true,
-                title: "Esse nome já está em uso :(",
-                subtitle: "Escolha outro nome: "
-            })
-        }
-        else if(status === 403){
-            navigate('/')
-        }
-        else{
-            setUserNameModal({
-                isVisible: true,
-                title: "Nome inválido",
-                subtitle: "Escolha outro nome: "
+                title: errorConfig.title,
+                subtitle: errorConfig.subtitle
             })
         }
     }

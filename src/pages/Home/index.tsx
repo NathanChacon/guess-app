@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../axios'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import RoomCard from './components/RoomCard';
+import Warning from './components/Warning';
+
 import './style.css'
 
 type Room = {
@@ -10,9 +12,14 @@ type Room = {
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation()
   const [rooms, setRooms] = useState<Room[]>([])
   const [userName, setUserName] = useState('')
   const [userNameError, setUserNameError] = useState<String | null>(null)
+  const isRoomFullError = location?.state?.isRoomFull
+
+  const [isWarningVisible, setIsWarningVisible] = useState(isRoomFullError)
+
 
 const handleUserNameErrors = (userName: string) => {
   var specialCharacters = /[!@#$%^&*(),.?":{}|<>]/;
@@ -66,6 +73,10 @@ else if (userName.length > 10) {
      handleUserNameErrors(event.target.value)
   };
 
+  const handleWarning = () => {
+    setIsWarningVisible(false)
+  }
+
 
   return (
     <section className='home'>
@@ -93,6 +104,10 @@ else if (userName.length > 10) {
         ))}
         </ul>
     </div>
+    {
+      isWarningVisible && <Warning title='Ops, a sala está cheia' subtitle='Tente outra da nossa lista :)' onClick={handleWarning} />
+    }
+    
   </section>
   )
 };
