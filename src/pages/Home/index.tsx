@@ -19,7 +19,7 @@ const Home: React.FC = () => {
   const isRoomFullError = location?.state?.isRoomFull
 
   const [isWarningVisible, setIsWarningVisible] = useState(isRoomFullError)
-
+  const [isNameWarningVisible, setIsNameWarningVisible] = useState(false)
 
 const handleUserNameErrors = (userName: string) => {
   var specialCharacters = /[!@#$%^&*(),.?":{}|<>]/;
@@ -59,11 +59,11 @@ else if (userName.length > 10) {
   }, [])
 
   const handleJoinRoom = (roomId:string) => {
-    if(!userNameError){
+    if(!userNameError && userName){
       navigate(`rooms/${roomId}`,{ state: { userName} })   
     }
     else{
-
+      setIsNameWarningVisible(true)
     }
   }
 
@@ -106,6 +106,10 @@ else if (userName.length > 10) {
     </div>
     {
       isWarningVisible && <Warning title='Ops, a sala está cheia' subtitle='Tente outra da nossa lista :)' onClick={handleWarning} />
+    }
+
+{
+      isNameWarningVisible && <Warning title='Seu nick pode conter apenas letras e dígitos' subtitle='Deve Possuir no máximo 10 caracteres' onClick={() => {setIsNameWarningVisible(false)}} />
     }
     
   </section>
