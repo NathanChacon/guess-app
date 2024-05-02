@@ -1,33 +1,33 @@
-import './App.css';
+import "./App.css";
 
-import React, { useState, useEffect } from 'react';
-import { socket } from '../../socket';
+import React, { useState, useEffect } from "react";
+import { socket } from "../../socket";
 
 const Test: React.FC = () => {
   const [messages, setMessages] = useState<string[]>([]);
-  const [inputMessage, setInputMessage] = useState<string>('');
- // Replace with your server URL
+  const [inputMessage, setInputMessage] = useState<string>("");
+  // Replace with your server URL
 
   useEffect(() => {
     // Listen for incoming messages from the server
-    socket.connect()
-    socket.on('chat message', (msg: string) => {
-      console.log("test", msg)
-      setMessages(prevMessages => [...prevMessages, msg]);
+    socket.connect();
+    socket.on("chat message", (msg: string) => {
+      console.log("test", msg);
+      setMessages((prevMessages) => [...prevMessages, msg]);
     });
     // Clean up the socket connection when the component unmounts
     return () => {
-      socket.off('chat message');
-      socket.disconnect()
-    }
+      socket.off("chat message");
+      socket.disconnect();
+    };
   }, []); // Run this effect only once on component mount
 
   const handleMessageSubmit = (e: React.FormEvent) => {
-    console.log("chamado 2")
+    console.log("chamado 2");
     e.preventDefault();
-    if (inputMessage.trim() !== '') {
-      socket.emit('chat message', inputMessage);
-      setInputMessage('');
+    if (inputMessage.trim() !== "") {
+      socket.emit("chat message", inputMessage);
+      setInputMessage("");
     }
   };
 
@@ -50,6 +50,5 @@ const Test: React.FC = () => {
     </div>
   );
 };
-
 
 export default Test;

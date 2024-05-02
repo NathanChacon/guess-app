@@ -1,84 +1,79 @@
-.home{
-    color: white;
-    width: 100vw;
-    min-height: 100vh;
-    overflow: auto;
-    background-color:#7D5388;
-    padding: 47px 20px 0px 20px;
+.home {
+  color: white;
+  width: 100vw;
+  min-height: 100vh;
+  overflow: auto;
+  background-color: #7d5388;
+  padding: 47px 20px 0px 20px;
 }
 
-.home__name-section{
-    margin-bottom: 51px;
+.home__name-section {
+  margin-bottom: 51px;
 }
 
-.home__name-title{
-    font-size: 20px;
+.home__name-title {
+  font-size: 20px;
 }
 
-
-.home__room-title{
-    font-size: 20px;
-    margin-bottom: 20px;
+.home__room-title {
+  font-size: 20px;
+  margin-bottom: 20px;
 }
 
-.home__room-list{
-    display: flex;
-    list-style: none;
-    flex-wrap: wrap;
-    padding: 0;
-    margin: 0;
+.home__room-list {
+  display: flex;
+  list-style: none;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 0;
 }
 
-.home__room-list-item{
-    margin-right: 11px;
+.home__room-list-item {
+  margin-right: 11px;
 }
 
-
-.home__input-container{
-    display: flex;
-    flex-direction: column;
+.home__input-container {
+  display: flex;
+  flex-direction: column;
 }
-
-
 
 .home__input {
-    width: 100%;
-    max-width: 224px;
-    padding: 10px;
-    margin-top: 20px;
-    border-radius: 10px;
-    outline: none;
-    border: none;
+  width: 100%;
+  max-width: 224px;
+  padding: 10px;
+  margin-top: 20px;
+  border-radius: 10px;
+  outline: none;
+  border: none;
 }
 
 .home__input-error {
-    padding: 10px;
-    color: red;
+  padding: 10px;
+  color: red;
 }
 
 @media screen and (min-width: 1024px) {
-    .home{
-        padding: 74px 102px 74px 102px;
-    }
+  .home {
+    padding: 74px 102px 74px 102px;
+  }
 
-    .home__name-title{
-        font-size: 36px;
-    }
+  .home__name-title {
+    font-size: 36px;
+  }
 
-    .home__room-title{
-        font-size: 36px;
-    }
+  .home__room-title {
+    font-size: 36px;
+  }
 
-    .home__input {
-        width: 100%;
-        max-width: 374px;
-        font-size: 20px;
-        padding: 20px;
-    }
+  .home__input {
+    width: 100%;
+    max-width: 374px;
+    font-size: 20px;
+    padding: 20px;
+  }
 
-    .home__room-list-item{
-        width: 100%;
-        max-width: 200px;
-    }
-    
-}   
+  .home__room-list-item {
+    width: 100%;
+    max-width: 200px;
+  }
+}

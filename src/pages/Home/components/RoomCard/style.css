@@ -1,17 +1,16 @@
-.room-card{
-    background-color: #A65E96;
-    color: white;
-    width: 100%;
-    padding: 10px 8px 10px 10px;
-    cursor: pointer;
+.room-card {
+  background-color: #a65e96;
+  color: white;
+  width: 100%;
+  padding: 10px 8px 10px 10px;
+  cursor: pointer;
 }
 
-.room-card__title{
-    font-size: 16px;
-    padding-bottom: 25px;
+.room-card__title {
+  font-size: 16px;
+  padding-bottom: 25px;
 }
 
-
-.room-card__description{
-    font-size: 16px;
+.room-card__description {
+  font-size: 16px;
 }

@@ -1,169 +1,163 @@
-import { useEffect, useRef, useState, Dispatch, SetStateAction } from "react"
-import { socket } from "../../../socket"
+import { useEffect, useRef, useState, Dispatch, SetStateAction } from "react";
+import { socket } from "../../../socket";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 type User = {
-    name: string,
-    roomId: string | null,
-    points: number,
-    joinTime: Date,
-    id: string
-}
+  name: string;
+  roomId: string | null;
+  points: number;
+  joinTime: Date;
+  id: string;
+};
 
+const useRoom = ({
+  setUsers,
+}: {
+  setUsers: Dispatch<SetStateAction<Array<User>>>;
+}) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentPlayer, setCurrentPlayer] = useState<string | null>("");
+  const [currentTopic, setCurrentTopic] = useState<string | null>("");
+  const [timer, setTimer] = useState(null);
+  const [descriptionMessage, setDescriptionMessage] = useState("");
+  const [userNameModal, setUserNameModal] = useState({
+    title: "",
+    subtitle: "",
+    isVisible: false,
+  });
 
-const useRoom =  ({setUsers}: {setUsers: Dispatch<SetStateAction<Array<User>>>}) => {
+  const navigate = useNavigate();
+  const { roomId } = useParams();
+  const location = useLocation();
+  const initialized = useRef(false);
+  const userName = location.state && location.state.userName;
 
-    const [isPlaying, setIsPlaying] = useState(false)
-    const [currentPlayer, setCurrentPlayer] = useState<string | null>('')
-    const [currentTopic, setCurrentTopic] = useState<string | null>('')
-    const [timer, setTimer] = useState(null)
-    const [descriptionMessage, setDescriptionMessage] = useState('')
-    const [userNameModal, setUserNameModal] = useState({
-        title: "",
-        subtitle: "",
-        isVisible: false,
-    })
+  type ErrosMap = {
+    [key: number]: {
+      title: string;
+      subtitle: string;
+    };
+  };
 
-    const navigate = useNavigate()
-    const { roomId } = useParams()
-    const location = useLocation()
-    const initialized = useRef(false)
-    const userName = location.state && location.state.userName;
+  const errorsMap: ErrosMap = {
+    401: {
+      title: "Nome inválido",
+      subtitle: "Escolha outro nome: ",
+    },
+    409: {
+      title: "Esse nome já está em uso :(",
+      subtitle: "Escolha outro nome: ",
+    },
+  };
 
-    type ErrosMap = {
-        [key: number]: {
-            title: string
-            subtitle: string
-        }
+  const handleErrors = (status: number) => {
+    const errorConfig = errorsMap[status] || {
+      title: "Ops, algo deu erroado : (",
+      subtitle: "Tente novamente: ",
+    };
+
+    if (status === 403) {
+      return navigate("/", { state: { isRoomFull: true } });
     }
 
-    const errorsMap: ErrosMap = {
-        401: {
-            title: "Nome inválido",
-            subtitle: "Escolha outro nome: "
-        },
-        409: {
-            title: "Esse nome já está em uso :(",
-            subtitle: "Escolha outro nome: "
-        },
+    if (errorConfig) {
+      setUserNameModal({
+        isVisible: true,
+        title: errorConfig.title,
+        subtitle: errorConfig.subtitle,
+      });
+    }
+  };
 
+  const handleJoinRoom = (userName: string | undefined) => {
+    if (userName) {
+      socket.emit("room:join", { roomId, userName }, (response: any) => {
+        if (response?.status === 200) {
+          const { usersInRoom, currentDescription, currentPlayer } =
+            response.data;
+          setDescriptionMessage(currentDescription);
+          setCurrentPlayer(currentPlayer?.id);
+          setUsers((users) => {
+            return [...users, ...usersInRoom];
+          });
+
+          setUserNameModal({
+            isVisible: false,
+            title: "",
+            subtitle: "",
+          });
+        } else {
+          handleErrors(response?.status);
+        }
+      });
+    } else {
+      setUserNameModal({
+        isVisible: true,
+        title: "Escolha um nome",
+        subtitle: "Seu nome:",
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (!initialized.current) {
+      initialized.current = true;
+      handleJoinRoom(userName);
     }
 
-    const handleErrors = (status: number) => {
-        const errorConfig = errorsMap[status] || {title: "Ops, algo deu erroado : (", subtitle: "Tente novamente: "}
-        
-        if(status === 403){
-            return navigate('/', { state: {isRoomFull: true} })
-        }
-
-        if(errorConfig){
-            setUserNameModal({
-                isVisible: true,
-                title: errorConfig.title,
-                subtitle: errorConfig.subtitle
-            })
-        }
-    }
-
-    const handleJoinRoom = (userName: string | undefined) => {
-
-        if(userName){
-            socket.emit('room:join', {roomId, userName}, (response: any) => {
-                if(response?.status === 200){
-                  const {usersInRoom, currentDescription, currentPlayer} = response.data
-                    setDescriptionMessage(currentDescription)                  
-                    setCurrentPlayer(currentPlayer?.id)
-                    setUsers((users) => {
-                        return [...users, ...usersInRoom]
-                    });
-
-                    
-                    setUserNameModal({
-                        isVisible: false,
-                        title: "",
-                        subtitle: ""
-                    })
-                }
-                else{
-                  handleErrors(response?.status)
-                }
-              });
-        }
-        else{
-            setUserNameModal({
-                isVisible: true,
-                title: "Escolha um nome",
-                subtitle: "Seu nome:"
-            })
-        }
+    socket.on("room:next-match", (data: User) => {
+      if (data.id === socket.id) {
+        setIsPlaying(() => true);
+      } else {
+        setIsPlaying(() => false);
       }
 
-    useEffect(() => {
-        if(!initialized.current){
-            initialized.current = true
-            handleJoinRoom(userName)
-        }
-       
-       
+      setCurrentPlayer(() => data.name);
+    });
 
-        socket.on("room:next-match", (data: User) => {
-            if(data.id === socket.id){
-                setIsPlaying(() => true)
-            }
-            else{
-                setIsPlaying(() => false)
-            }
-    
-    
-            setCurrentPlayer(() => data.name)
-        })
-    
-        socket.on("room:description", ({description}) => {
-            setDescriptionMessage(description)
-        })
-    
-        socket.on("room:topic", (data: any) => {
-            setCurrentTopic(data.topic)
-        })
-    
-        socket.on("room:stop", (data: any) => {
-            setCurrentTopic(null)
-            setCurrentPlayer(null)
-        })
-    
-        socket.on("room:timer", (data: any) => {
-            if(data && data > 0){
-            setTimer(data)
-            }
-            else{
-            setTimer(null)
-            }
-        })
-    
-    
-        socket.on("room:score", (data: any) => {
-            console.log("test", data)
-        })
+    socket.on("room:description", ({ description }) => {
+      setDescriptionMessage(description);
+    });
 
-      return () => {
-        socket.off("room:next-match")
-        socket.off("room:description")
-        socket.off("room:topic")
-        socket.off("room:timer")
-        socket.off("room:score")
+    socket.on("room:topic", (data: any) => {
+      setCurrentTopic(data.topic);
+    });
+
+    socket.on("room:stop", (data: any) => {
+      setCurrentTopic(null);
+      setCurrentPlayer(null);
+    });
+
+    socket.on("room:timer", (data: any) => {
+      if (data && data > 0) {
+        setTimer(data);
+      } else {
+        setTimer(null);
       }
-    }, [])
+    });
 
+    socket.on("room:score", (data: any) => {
+      console.log("test", data);
+    });
 
-    return {
-        timer,
-        descriptionMessage,
-        currentPlayer,
-        currentTopic,
-        isPlaying,
-        userNameModal,
-        handleJoinRoom,
-        setDescriptionMessage
-    }
-}
+    return () => {
+      socket.off("room:next-match");
+      socket.off("room:description");
+      socket.off("room:topic");
+      socket.off("room:timer");
+      socket.off("room:score");
+    };
+  }, []);
 
-export default useRoom
+  return {
+    timer,
+    descriptionMessage,
+    currentPlayer,
+    currentTopic,
+    isPlaying,
+    userNameModal,
+    handleJoinRoom,
+    setDescriptionMessage,
+  };
+};
+
+export default useRoom;
