@@ -45,6 +45,12 @@
     cursor: pointer;
 }
 
+
+.user-name__button--disabled{
+    background-color:#513558;
+    pointer-events: none;
+}
+
 .user-name__input{
     width: 100%;
     max-width: 156px;

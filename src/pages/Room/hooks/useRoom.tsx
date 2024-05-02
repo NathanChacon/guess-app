@@ -1,6 +1,6 @@
-import { useEffect, useState, Dispatch, SetStateAction } from "react"
+import { useEffect, useRef, useState, Dispatch, SetStateAction } from "react"
 import { socket } from "../../../socket"
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 type User = {
     name: string,
     roomId: string | null,
@@ -23,29 +23,45 @@ const useRoom =  ({setUsers}: {setUsers: Dispatch<SetStateAction<Array<User>>>})
         isVisible: false,
     })
 
+    const navigate = useNavigate()
     const { roomId } = useParams()
     const location = useLocation()
-
+    const initialized = useRef(false)
     const userName = location.state && location.state.userName;
 
+    const handleErrors = (status:number) => {
+        if(status === 409){
+            setUserNameModal({
+                isVisible: true,
+                title: "Esse nome já está em uso :(",
+                subtitle: "Escolha outro nome: "
+            })
+        }
+        else if(status === 403){
+            navigate('/')
+        }
+        else{
+            setUserNameModal({
+                isVisible: true,
+                title: "Nome inválido",
+                subtitle: "Escolha outro nome: "
+            })
+        }
+    }
+
     const handleJoinRoom = (userName: string | undefined) => {
+
         if(userName){
             socket.emit('room:join', {roomId, userName}, (response: any) => {
                 if(response?.status === 200){
                   const {usersInRoom, currentDescription, currentPlayer} = response.data
-      
-                  if(currentDescription){
-                      setDescriptionMessage(currentDescription)
-                    }
-              
-                    if(currentPlayer){
-                      setCurrentPlayer(currentPlayer.id)
-                    }
-              
+                    setDescriptionMessage(currentDescription)                  
+                    setCurrentPlayer(currentPlayer?.id)
                     setUsers((users) => {
                         return [...users, ...usersInRoom]
                     });
 
+                    
                     setUserNameModal({
                         isVisible: false,
                         title: "",
@@ -53,7 +69,7 @@ const useRoom =  ({setUsers}: {setUsers: Dispatch<SetStateAction<Array<User>>>})
                     })
                 }
                 else{
-                  //handleErrors(response?.status)
+                  handleErrors(response?.status)
                 }
               });
         }
@@ -67,7 +83,12 @@ const useRoom =  ({setUsers}: {setUsers: Dispatch<SetStateAction<Array<User>>>})
       }
 
     useEffect(() => {
-        handleJoinRoom(userName)
+        if(!initialized.current){
+            initialized.current = true
+            handleJoinRoom(userName)
+        }
+       
+       
 
         socket.on("room:next-match", (data: User) => {
             if(data.id === socket.id){

@@ -62,7 +62,7 @@ const UserNameModal = ({title, subtitle, onEnter}: UserNameModal) => {
                 </div>
 
                 <div className="user-name__button-container">
-                    <button className="user-name__button" disabled={isButtonDisabled} onClick={() => {onEnter(userName)}}>ENTRAR</button>
+                    <button className={`user-name__button ${isButtonDisabled && 'user-name__button--disabled'}`} disabled={isButtonDisabled} onClick={() => {onEnter(userName)}}>ENTRAR</button>
                 </div>
             </div>
         </section>
