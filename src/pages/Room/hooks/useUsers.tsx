@@ -59,9 +59,25 @@ const useUsers = ({
       });
     });
 
+    socket.on("room:score", (data: any) => {
+      const {writer, user} = data
+      const userToUpdate = users.find(({id}) => id === user.id)
+      const writerToUpdate = users.find(({id}) => id === writer.id)
+
+      if(userToUpdate && writerToUpdate){
+        userToUpdate.points = user.points
+        writerToUpdate.points = writer.points
+  
+        setUsers([...users])
+      }
+
+      console.log("test", data);
+    });
+
     return () => {
       socket.off("room:user-enter");
       socket.off("room:user-leave");
+      socket.off("room:score");
     };
   }, []);
 

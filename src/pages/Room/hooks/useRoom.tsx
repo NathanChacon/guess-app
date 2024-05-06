@@ -135,16 +135,11 @@ const useRoom = ({
       }
     });
 
-    socket.on("room:score", (data: any) => {
-      console.log("test", data);
-    });
-
     return () => {
       socket.off("room:next-match");
       socket.off("room:description");
       socket.off("room:topic");
       socket.off("room:timer");
-      socket.off("room:score");
     };
   }, []);
 
