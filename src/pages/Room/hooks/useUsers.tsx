@@ -61,15 +61,19 @@ const useUsers = ({
 
     socket.on("room:score", (data: any) => {
       const {writer, user} = data
-      const userToUpdate = users.find(({id}) => id === user.id)
-      const writerToUpdate = users.find(({id}) => id === writer.id)
 
-      if(userToUpdate && writerToUpdate){
-        userToUpdate.points = user.points
-        writerToUpdate.points = writer.points
+
+
   
-        setUsers([...users])
-      }
+        setUsers((users) => {
+          const userToUpdate = users.find(({id}) => id === user.id)
+          const writerToUpdate = users.find(({id}) => id === writer.id)
+          if(userToUpdate && writerToUpdate){
+            userToUpdate.points = user.points
+            writerToUpdate.points = writer.points
+          }
+          return [...users]
+        } )
 
       console.log("test", data);
     });
