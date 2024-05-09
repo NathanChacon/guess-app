@@ -59,6 +59,12 @@
   margin-bottom: 10px;
 }
 
+.room__waiting-user {
+  color: white;
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
 .room__topic {
   color: white;
   font-size: 20px;
@@ -148,6 +154,10 @@
   }
 
   .room__player-title {
+    font-size: 18px;
+  }
+
+  .room__waiting-user {
     font-size: 18px;
   }
 

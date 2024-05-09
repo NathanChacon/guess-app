@@ -110,7 +110,7 @@ const useRoom = ({
       } else {
         setIsPlaying(() => false);
       }
-
+      setDescriptionMessage('')
       setCurrentPlayer(() => data.name);
     });
 
@@ -125,21 +125,14 @@ const useRoom = ({
     socket.on("room:stop", (data: any) => {
       setCurrentTopic(null);
       setCurrentPlayer(null);
-    });
-
-    socket.on("room:timer", (data: any) => {
-      if (data && data > 0) {
-        setTimer(data);
-      } else {
-        setTimer(null);
-      }
+      setTimer(null)
+      setIsPlaying(false)
     });
 
     return () => {
       socket.off("room:next-match");
       socket.off("room:description");
       socket.off("room:topic");
-      socket.off("room:timer");
     };
   }, []);
 

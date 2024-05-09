@@ -59,9 +59,6 @@ const useUsers = ({
 
     socket.on("room:score", (data: any) => {
       const {writer, user} = data
-
-
-
   
         setUsers((users) => {
           const userToUpdate = users.find(({id}) => id === user.id)

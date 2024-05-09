@@ -8,6 +8,8 @@ import useMessages from "./hooks/useMessages";
 import useUsers from "./hooks/useUsers";
 import useRoom from "./hooks/useRoom";
 import UserNameModal from "./components/UserNameModal";
+import useTimer from "./hooks/useTimer";
+import ProgressBar from "./components/ProgressBar";
 
 const Room = () => {
   const { roomId } = useParams();
@@ -16,7 +18,7 @@ const Room = () => {
   const { messages, setMessages } = useMessages();
 
   const { users, setUsers } = useUsers({ setMessages });
-
+  const isWaitingMoreUsers = users?.length <= 1
   const {
     timer,
     descriptionMessage,
@@ -27,6 +29,10 @@ const Room = () => {
     currentTopic,
     isPlaying,
   } = useRoom({ setUsers });
+
+  const {percentage} = useTimer()
+
+  console.log("works", percentage)
 
   const handleMessageChange = (event: any) => {
     setCurrentMessage(event.target.value);
@@ -79,8 +85,13 @@ const Room = () => {
 
         <div className="room__play-area">
           <div className="room__writer-section">
+              {
+                isWaitingMoreUsers && (
+                  <h1 className="room__waiting-user">Esperando mais jogadores...</h1>
+                )
+              }
               {currentPlayer && (
-                <h1 className="room__player-title">{currentPlayer}</h1>
+                <h1 className="room__player-title">Vez de: {currentPlayer}</h1>
               )}
               {isPlaying && <h4 className="room__topic">Tópico: {currentTopic}</h4>}
               <div className="room__play">
@@ -92,14 +103,15 @@ const Room = () => {
                   disabled={!isPlaying}
                 />
           </div>
+          <ProgressBar percentage={percentage} />
           </div>
 
 
           <div className="room__chat">
             <ul className="room__chat-messages">
-              {messages.map(({ text, variant }) => {
+              {messages.map(({ text, variant }, index) => {
                 return (
-                  <li>
+                  <li key={index}>
                     <Message text={text} variant={variant} />
                   </li>
                 );
