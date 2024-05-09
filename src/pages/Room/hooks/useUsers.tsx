@@ -23,12 +23,10 @@ const useUsers = ({
 
   useEffect(() => {
     socket.on("room:user-enter", (data: User) => {
-      console.log("data", data);
-
       setMessages((messages: any) => {
         const message = {
           text: `${data.name} entrou na sala`,
-          variant: "success",
+          variant: "info",
         };
         return [...messages, message];
       });
@@ -45,7 +43,7 @@ const useUsers = ({
     socket.on("room:user-leave", (data: User) => {
       const message = {
         text: `${data.name} saiu da sala`,
-        variant: "error",
+        variant: "info",
       };
 
       setMessages((messages: any) => {
@@ -75,7 +73,18 @@ const useUsers = ({
           return [...users]
         } )
 
-      console.log("test", data);
+
+        setMessages((messages: any) => {
+          const message = {
+            text: `${user.name} acertou!`,
+            variant: "success",
+          };
+
+          return [...messages, message];
+        });
+
+
+
     });
 
     return () => {

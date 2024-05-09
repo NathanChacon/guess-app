@@ -78,18 +78,22 @@ const Room = () => {
         </div>
 
         <div className="room__play-area">
-          {currentPlayer && (
-            <h1 className="room__player-title">{currentPlayer}</h1>
-          )}
-          {isPlaying && <h4 className="room__topic">Tópico: {currentTopic}</h4>}
-          <div className="room__play">
-            <textarea
-              value={descriptionMessage}
-              onChange={onDescriptionChange}
-              placeholder="Type your message here..."
-              disabled={!isPlaying}
-            />
+          <div className="room__writer-section">
+              {currentPlayer && (
+                <h1 className="room__player-title">{currentPlayer}</h1>
+              )}
+              {isPlaying && <h4 className="room__topic">Tópico: {currentTopic}</h4>}
+              <div className="room__play">
+                <textarea
+                  value={descriptionMessage}
+                  onChange={onDescriptionChange}
+                  placeholder="Descreva o tópico aqui..."
+                  maxLength={180}
+                  disabled={!isPlaying}
+                />
           </div>
+          </div>
+
 
           <div className="room__chat">
             <ul className="room__chat-messages">

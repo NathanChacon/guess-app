@@ -5,8 +5,9 @@ type messageProps = {
 const Message = ({ text, variant }: messageProps) => {
   const colorMap = {
     common: "white",
+    info: "#6b0087",
     error: "red",
-    success: "green",
+    success: "#5cb85c",
   };
 
   const textColor = colorMap[variant];

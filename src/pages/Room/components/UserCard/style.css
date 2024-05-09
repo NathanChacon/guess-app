@@ -39,7 +39,20 @@
     flex-direction: column;
   }
 
+  .user-card__image {
+    width: 40px; /* Set the initial width */
+    height: 40px; /* Set the initial height */
+  }
+
   .user-card__info {
     margin-left: 0px;
+  }
+
+  .user-card__title {
+    font-size: 12px;
+  }
+  
+  .user-card__subtitle {
+    font-size: 10px;
   }
 }
