@@ -25,7 +25,7 @@ const useMessages = () => {
       if(chatContainerRef?.current){
         setTimeout(() => {
           chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-        }, 0);
+        }, 400);
       }
     });
 
