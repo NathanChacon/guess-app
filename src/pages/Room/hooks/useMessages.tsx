@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef} from "react";
 import { socket } from "../../../socket";
 
 type Message = {
@@ -8,7 +8,7 @@ type Message = {
 
 const useMessages = () => {
   const [messages, setMessages] = useState<Message[]>([]);
-
+  const chatContainerRef: any = useRef(null);
   useEffect(() => {
     socket.on("room:chat", (data: any) => {
       const text = `${data.fromUser.name}: ${data.message}`;
@@ -18,7 +18,15 @@ const useMessages = () => {
         variant: "common",
       };
 
-      setMessages((messages: any) => [...messages, message]);
+      setMessages((messages: any) => {
+        return [...messages, message]
+      } );
+
+      if(chatContainerRef?.current){
+        setTimeout(() => {
+          chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        }, 0);
+      }
     });
 
     return () => {
@@ -29,6 +37,7 @@ const useMessages = () => {
   return {
     messages,
     setMessages,
+    chatContainerRef
   };
 };
 

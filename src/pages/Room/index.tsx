@@ -15,7 +15,7 @@ const Room = () => {
   const { roomId } = useParams();
   const [currentMessage, setCurrentMessage] = useState("");
 
-  const { messages, setMessages } = useMessages();
+  const { messages, setMessages, chatContainerRef } = useMessages();
 
   const { users, setUsers } = useUsers({ setMessages });
   const isWaitingMoreUsers = users?.length <= 1
@@ -32,7 +32,6 @@ const Room = () => {
 
   const {percentage} = useTimer()
 
-  console.log("works", percentage)
 
   const handleMessageChange = (event: any) => {
     setCurrentMessage(event.target.value);
@@ -108,7 +107,7 @@ const Room = () => {
 
 
           <div className="room__chat">
-            <ul className="room__chat-messages">
+            <ul className="room__chat-messages" ref={chatContainerRef}>
               {messages.map(({ text, variant }, index) => {
                 return (
                   <li key={index}>
