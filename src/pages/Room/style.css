@@ -82,7 +82,7 @@
   max-width: 755px;
   resize: none;
   padding: 10px;
-  height: 190px;
+  height: 170px;
   border: 1px solid #ccc;
   outline: none;
   font-size: 20px;
@@ -151,7 +151,7 @@
   }
 
   .room__chat-messages {
-    height: 90px;
+    height: 100px;
   }
 
   .room__player-title {
