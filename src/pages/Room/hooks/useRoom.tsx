@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, Dispatch, SetStateAction } from "react";
 import { socket } from "../../../socket";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
+
 type User = {
   name: string;
   roomId: string | null;
@@ -8,6 +9,12 @@ type User = {
   joinTime: Date;
   id: string;
 };
+
+type nextMatchData = {
+  currentPlayer: User,
+  previousTopic: string
+}
+
 
 const useRoom = ({
   setUsers,
@@ -104,14 +111,15 @@ const useRoom = ({
       handleJoinRoom(userName);
     }
 
-    socket.on("room:next-match", (data: User) => {
-      if (data.id === socket.id) {
+    socket.on("room:next-match", (data: nextMatchData) => {
+      const currentPlayer = data.currentPlayer
+      if (currentPlayer.id === socket.id) {
         setIsPlaying(() => true);
       } else {
         setIsPlaying(() => false);
       }
       setDescriptionMessage('')
-      setCurrentPlayer(() => data.name);
+      setCurrentPlayer(() => currentPlayer.name);
     });
 
     socket.on("room:description", ({ description }) => {

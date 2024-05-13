@@ -29,8 +29,24 @@ const useMessages = () => {
       }
     });
 
+    socket.on("room:next-match", (data: any) => {
+      if(!!data.previousTopic){
+        const text = `A resposta era: ${data.previousTopic}`;
+        const message = {
+          text,
+          variant: "success",
+        };
+  
+        setMessages((messages: any) => {
+          return [...messages, message]
+        } );
+      }
+
+    });
+
     return () => {
       socket.off("room:chat");
+      socket.off("room:next-match")
     };
   }, []);
 
