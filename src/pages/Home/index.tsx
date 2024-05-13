@@ -3,11 +3,13 @@ import api from "../../axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import RoomCard from "./components/RoomCard";
 import Warning from "./components/Warning";
-
+import { socket } from "../../socket";
 import "./style.css";
 
 type Room = {
   title: string;
+  id: string,
+  players: number
 };
 
 const Home: React.FC = () => {
@@ -50,7 +52,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     api.get("/rooms").then((res): void => {
-      setRooms(res.data);
+      setRooms(res.data.rooms);
     });
   }, []);
 
@@ -71,6 +73,16 @@ const Home: React.FC = () => {
   const handleWarning = () => {
     setIsWarningVisible(false);
   };
+
+  useEffect(() => {
+    socket.on("room:change-state", (data: any) => {
+      console.log("works", data)
+    });
+
+    return () => {
+      socket.off("room:change-state")
+    }
+  }, [])
 
   return (
     <section className="home">
@@ -95,8 +107,8 @@ const Home: React.FC = () => {
             <li className="home__room-list-item">
               <RoomCard
                 title={room.title}
-                description="Jogadores: 1/5"
-                onClick={() => handleJoinRoom(room.title)}
+                description= {`Jogadores: ${room.players}/5`}
+                onClick={() => handleJoinRoom(room.id)}
               />
             </li>
           ))}
