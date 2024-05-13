@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, Dispatch, SetStateAction } from "react";
 import { socket } from "../../../socket";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
+import nextMatchAudio from '../../../audios/next_match.mp3';
+
 
 type User = {
   name: string;
@@ -54,6 +56,12 @@ const useRoom = ({
       title: "Esse nome já está em uso :(",
       subtitle: "Escolha outro nome: ",
     },
+  };
+
+  const nextMatchSound = () => {
+    const audio = new Audio(nextMatchAudio);
+    audio.volume=0.3
+    audio.play();
   };
 
   const handleErrors = (status: number) => {
@@ -112,6 +120,7 @@ const useRoom = ({
     }
 
     socket.on("room:next-match", (data: nextMatchData) => {
+      nextMatchSound()
       const currentPlayer = data.currentPlayer
       if (currentPlayer.id === socket.id) {
         setIsPlaying(() => true);
