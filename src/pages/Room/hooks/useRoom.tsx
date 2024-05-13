@@ -82,7 +82,7 @@ const useRoom = ({
           const { usersInRoom, currentDescription, currentPlayer } =
             response.data;
           setDescriptionMessage(currentDescription);
-          setCurrentPlayer(currentPlayer?.id);
+          setCurrentPlayer(currentPlayer?.name);
           setUsers((users) => {
             return [...users, ...usersInRoom];
           });
