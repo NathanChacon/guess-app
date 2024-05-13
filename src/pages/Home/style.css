@@ -29,7 +29,9 @@
 }
 
 .home__room-list-item {
-  margin-right: 11px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  width: calc(50% - 10px);
 }
 
 .home__input-container {
