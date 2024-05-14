@@ -1,9 +1,12 @@
 .home {
   color: white;
   width: 100vw;
-  min-height: 100vh;
+  height: 100vh;
   overflow: auto;
   background-color: #7d5388;
+}
+
+.home__main {
   padding: 47px 20px 0px 20px;
 }
 
@@ -56,7 +59,7 @@
 }
 
 @media screen and (min-width: 1024px) {
-  .home {
+  .home__main {
     padding: 74px 102px 74px 102px;
   }
 

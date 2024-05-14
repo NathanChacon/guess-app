@@ -4,12 +4,13 @@ import { useNavigate, useLocation } from "react-router-dom";
 import RoomCard from "./components/RoomCard";
 import Warning from "./components/Warning";
 import { socket } from "../../socket";
+import CustomScrollbar from "../../components/CustomScrollbar";
 import "./style.css";
 
 type Room = {
   title: string;
-  id: string,
-  players: number
+  id: string;
+  players: number;
 };
 
 const Home: React.FC = () => {
@@ -76,61 +77,66 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     socket.on("room:change-state", (data: any) => {
-      console.log("works", data)
+      console.log("works", data);
     });
 
     return () => {
-      socket.off("room:change-state")
-    }
-  }, [])
+      socket.off("room:change-state");
+    };
+  }, []);
 
   return (
     <section className="home">
-      <div className="home__name-section">
-        <h1 className="home__name-title">Seu Nome:</h1>
-        <div className="home__input-container">
-          <input
-            type="text"
-            className="home__input"
-            value={userName}
-            onChange={handleUserNameChange}
-          />
-          <span className="home__input-error">
-            {userNameError && userNameError}
-          </span>
-        </div>
-      </div>
-      <div className="home__room-section">
-        <h1 className="home__room-title">Salas:</h1>
-        <ul className="home__room-list">
-          {rooms.map((room) => (
-            <li className="home__room-list-item">
-              <RoomCard
-                title={room.title}
-                description= {`Jogadores: ${room.players}/5`}
-                onClick={() => handleJoinRoom(room.id)}
+      <CustomScrollbar>
+        <div className="home__main">
+          <div className="home__name-section">
+            <h1 className="home__name-title">Seu Nome:</h1>
+            <div className="home__input-container">
+              <input
+                type="text"
+                className="home__input"
+                value={userName}
+                onChange={handleUserNameChange}
               />
-            </li>
-          ))}
-        </ul>
-      </div>
-      {isWarningVisible && (
-        <Warning
-          title="Ops, a sala está cheia"
-          subtitle="Tente outra da nossa lista :)"
-          onClick={handleWarning}
-        />
-      )}
+              <span className="home__input-error">
+                {userNameError && userNameError}
+              </span>
+            </div>
+          </div>
+          <div className="home__room-section">
+            <h1 className="home__room-title">Salas:</h1>
+            <ul className="home__room-list">
+              {rooms.map((room) => (
+                <li className="home__room-list-item">
+                  <RoomCard
+                    title={room.title}
+                    description={`Jogadores: ${room.players}/5`}
+                    onClick={() => handleJoinRoom(room.id)}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
 
-      {isNameWarningVisible && (
-        <Warning
-          title="Seu nick pode conter apenas letras e dígitos"
-          subtitle="Deve Possuir no máximo 10 caracteres"
-          onClick={() => {
-            setIsNameWarningVisible(false);
-          }}
-        />
-      )}
+        {isWarningVisible && (
+          <Warning
+            title="Ops, a sala está cheia"
+            subtitle="Tente outra da nossa lista :)"
+            onClick={handleWarning}
+          />
+        )}
+
+        {isNameWarningVisible && (
+          <Warning
+            title="Seu nick pode conter apenas letras e dígitos"
+            subtitle="Deve Possuir no máximo 10 caracteres"
+            onClick={() => {
+              setIsNameWarningVisible(false);
+            }}
+          />
+        )}
+      </CustomScrollbar>
     </section>
   );
 };

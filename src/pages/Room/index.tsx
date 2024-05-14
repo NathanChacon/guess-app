@@ -10,8 +10,7 @@ import useRoom from "./hooks/useRoom";
 import UserNameModal from "./components/UserNameModal";
 import useTimer from "./hooks/useTimer";
 import ProgressBar from "./components/ProgressBar";
-import Scrollbars from "react-custom-scrollbars-2";
-
+import CustomScrollbar from "../../components/CustomScrollbar";
 const Room = () => {
   const { roomId } = useParams();
   const [currentMessage, setCurrentMessage] = useState("");
@@ -19,7 +18,7 @@ const Room = () => {
   const { messages, setMessages, chatContainerRef } = useMessages();
 
   const { users, setUsers } = useUsers({ setMessages });
-  const isWaitingMoreUsers = users?.length <= 1
+  const isWaitingMoreUsers = users?.length <= 1;
   const {
     timer,
     descriptionMessage,
@@ -31,18 +30,17 @@ const Room = () => {
     isPlaying,
   } = useRoom({ setUsers });
 
-  const {percentage} = useTimer()
+  const { percentage } = useTimer();
 
   const getPlaceHolderText = () => {
-    if(isWaitingMoreUsers || !isPlaying){
-      return "Espere sua vez para escrever aqui : )"
+    if (isWaitingMoreUsers || !isPlaying) {
+      return "Espere sua vez para escrever aqui : )";
     }
 
-    return "Descreva seu tópico..."
-  }
+    return "Descreva seu tópico...";
+  };
 
-  const placeholderText = getPlaceHolderText()
-
+  const placeholderText = getPlaceHolderText();
 
   const handleMessageChange = (event: any) => {
     setCurrentMessage(event.target.value);
@@ -95,31 +93,32 @@ const Room = () => {
 
         <div className="room__play-area">
           <div className="room__writer-section">
-              {
-                isWaitingMoreUsers && (
-                  <h1 className="room__waiting-user">Esperando mais jogadores...</h1>
-                )
-              }
-              {currentPlayer && (
-                <h1 className="room__player-title">Vez de: {currentPlayer}</h1>
-              )}
-              {isPlaying && <h4 className="room__topic">Tópico: {currentTopic}</h4>}
-              <div className="room__play">
-                <textarea
-                  value={descriptionMessage}
-                  onChange={onDescriptionChange}
-                  placeholder={placeholderText}
-                  maxLength={180}
-                  disabled={!isPlaying}
-                />
+            {isWaitingMoreUsers && (
+              <h1 className="room__waiting-user">
+                Esperando mais jogadores...
+              </h1>
+            )}
+            {currentPlayer && (
+              <h1 className="room__player-title">Vez de: {currentPlayer}</h1>
+            )}
+            {isPlaying && (
+              <h4 className="room__topic">Tópico: {currentTopic}</h4>
+            )}
+            <div className="room__play">
+              <textarea
+                value={descriptionMessage}
+                onChange={onDescriptionChange}
+                placeholder={placeholderText}
+                maxLength={180}
+                disabled={!isPlaying}
+              />
+            </div>
+            <ProgressBar percentage={percentage} />
           </div>
-          <ProgressBar percentage={percentage} />
-          </div>
-
 
           <div className="room__chat">
-            <ul className="room__chat-messages" >
-              <Scrollbars style={{ width: "100%", height: "100%" }} ref={chatContainerRef}>
+            <ul className="room__chat-messages">
+              <CustomScrollbar scrollRef={chatContainerRef}>
                 {messages.map(({ text, variant }, index) => {
                   return (
                     <li key={index}>
@@ -127,8 +126,7 @@ const Room = () => {
                     </li>
                   );
                 })}
-              </Scrollbars>
-
+              </CustomScrollbar>
             </ul>
             <input
               type={"text"}

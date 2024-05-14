@@ -45,7 +45,7 @@
   height: 100%;
 }
 
-.room__writer-section{
+.room__writer-section {
   width: 100%;
   display: flex;
   width: 100%;
@@ -88,7 +88,8 @@
   font-size: 20px;
 }
 
-.room__play textarea:disabled,  .room__play textarea:disabled::placeholder{
+.room__play textarea:disabled,
+.room__play textarea:disabled::placeholder {
   color: white;
 }
 
