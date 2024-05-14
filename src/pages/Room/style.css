@@ -88,6 +88,10 @@
   font-size: 20px;
 }
 
+.room__play textarea:disabled,  .room__play textarea:disabled::placeholder{
+  color: white;
+}
+
 .room__chat {
   width: 100%;
   display: flex;

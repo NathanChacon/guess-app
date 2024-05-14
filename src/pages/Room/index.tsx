@@ -32,6 +32,16 @@ const Room = () => {
 
   const {percentage} = useTimer()
 
+  const getPlaceHolderText = () => {
+    if(isWaitingMoreUsers || !isPlaying){
+      return "Espere sua vez para escrever aqui : )"
+    }
+
+    return "Descreva seu tópico..."
+  }
+
+  const placeholderText = getPlaceHolderText()
+
 
   const handleMessageChange = (event: any) => {
     setCurrentMessage(event.target.value);
@@ -97,7 +107,7 @@ const Room = () => {
                 <textarea
                   value={descriptionMessage}
                   onChange={onDescriptionChange}
-                  placeholder="Descreva o tópico aqui..."
+                  placeholder={placeholderText}
                   maxLength={180}
                   disabled={!isPlaying}
                 />
