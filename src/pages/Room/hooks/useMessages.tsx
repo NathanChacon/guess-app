@@ -21,12 +21,12 @@ const useMessages = () => {
       setMessages((messages: any) => {
         return [...messages, message]
       } );
+      setTimeout(() => {
+        if(chatContainerRef?.current){
+          chatContainerRef.current.scrollToBottom();
+        }
+      }, 100)
 
-      if(chatContainerRef?.current){
-        setTimeout(() => {
-          chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-        }, 400);
-      }
     });
 
     socket.on("room:next-match", (data: any) => {

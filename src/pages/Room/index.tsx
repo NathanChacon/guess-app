@@ -10,6 +10,7 @@ import useRoom from "./hooks/useRoom";
 import UserNameModal from "./components/UserNameModal";
 import useTimer from "./hooks/useTimer";
 import ProgressBar from "./components/ProgressBar";
+import Scrollbars from "react-custom-scrollbars-2";
 
 const Room = () => {
   const { roomId } = useParams();
@@ -117,14 +118,17 @@ const Room = () => {
 
 
           <div className="room__chat">
-            <ul className="room__chat-messages" ref={chatContainerRef}>
-              {messages.map(({ text, variant }, index) => {
-                return (
-                  <li key={index}>
-                    <Message text={text} variant={variant} />
-                  </li>
-                );
-              })}
+            <ul className="room__chat-messages" >
+              <Scrollbars style={{ width: "100%", height: "100%" }} ref={chatContainerRef}>
+                {messages.map(({ text, variant }, index) => {
+                  return (
+                    <li key={index}>
+                      <Message text={text} variant={variant} />
+                    </li>
+                  );
+                })}
+              </Scrollbars>
+
             </ul>
             <input
               type={"text"}
