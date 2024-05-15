@@ -89,7 +89,7 @@ const useRoom = ({
         if (response?.status === 200) {
           const { usersInRoom, currentDescription, currentPlayer } =
             response.data;
-          setDescriptionMessage(currentDescription);
+          setDescriptionMessage(currentDescription || "");
           setCurrentPlayer(currentPlayer?.name);
           setUsers((users) => {
             return [...users, ...usersInRoom];
@@ -131,8 +131,8 @@ const useRoom = ({
       setCurrentPlayer(() => currentPlayer.name);
     });
 
-    socket.on("room:description", ({ description }) => {
-      setDescriptionMessage(description);
+    socket.on("room:description", ({ description }:any) => {
+      setDescriptionMessage(description || "");
     });
 
     socket.on("room:topic", (data: any) => {

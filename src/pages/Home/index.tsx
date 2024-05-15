@@ -77,7 +77,6 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     socket.on("room:change-state", (data: any) => {
-      console.log("works", data);
     });
 
     return () => {
@@ -107,7 +106,7 @@ const Home: React.FC = () => {
             <h1 className="home__room-title">Salas:</h1>
             <ul className="home__room-list">
               {rooms.map((room) => (
-                <li className="home__room-list-item">
+                <li className="home__room-list-item" key={room.id}>
                   <RoomCard
                     title={room.title}
                     description={`Jogadores: ${room.players}/5`}
