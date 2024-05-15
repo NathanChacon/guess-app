@@ -36,7 +36,7 @@ const Room = () => {
 
   const { percentage } = useTimer();
 
-  const getPlaceHolderText = () => {
+  const getWriterFieldPlaceHolder = () => {
     if (isWaitingMoreUsers || !isPlaying) {
       return "Espere sua vez para escrever aqui :)";
     }
@@ -44,7 +44,20 @@ const Room = () => {
     return "Descreva seu tópico...";
   };
 
-  const placeholderText = getPlaceHolderText();
+  const getGuesserFieldPlaceHolder = () => {
+    if(isPlaying){
+      return "Sua vez!"
+    }
+
+    if (isMessageDisabled) {
+      return "Você acertou!";
+    }
+
+
+    return "Escreva aqui...";
+  };
+
+  const writerPlaceholder = getWriterFieldPlaceHolder();
 
   const handleMessageChange = (event: any) => {
     setCurrentMessage(event.target.value);
@@ -112,7 +125,7 @@ const Room = () => {
               <textarea
                 value={descriptionMessage}
                 onChange={onDescriptionChange}
-                placeholder={placeholderText}
+                placeholder={writerPlaceholder}
                 maxLength={180}
                 disabled={!isPlaying}
               />
@@ -134,8 +147,8 @@ const Room = () => {
             </ul>
             <input
               type={"text"}
-              disabled={isMessageDisabled}
-              placeholder={!isMessageDisabled ? "escreva aqui..." : "Você acertou!"}
+              disabled={isMessageDisabled || isPlaying}
+              placeholder={getGuesserFieldPlaceHolder()}
               value={currentMessage}
               onChange={handleMessageChange}
               className="room__chat-input"
