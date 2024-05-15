@@ -11,13 +11,17 @@ import UserNameModal from "./components/UserNameModal";
 import useTimer from "./hooks/useTimer";
 import ProgressBar from "./components/ProgressBar";
 import CustomScrollbar from "../../components/CustomScrollbar";
+import useAudios from "./hooks/useAudios";
 const Room = () => {
   const { roomId } = useParams();
+  const {nextMatchSound, userJoinSound, userLeaveSound, setCanPlayAudio} = useAudios()
+
   const [currentMessage, setCurrentMessage] = useState("");
 
   const { messages, setMessages, chatContainerRef } = useMessages();
 
-  const { users, setUsers } = useUsers({ setMessages });
+  const { users, setUsers } = useUsers({ setMessages, userLeaveSound, userJoinSound });
+
   const isWaitingMoreUsers = users?.length <= 1;
   const {
     timer,
@@ -28,7 +32,7 @@ const Room = () => {
     currentPlayer,
     currentTopic,
     isPlaying,
-  } = useRoom({ setUsers });
+  } = useRoom({ setUsers, nextMatchSound});
 
   const { percentage } = useTimer();
 
@@ -76,7 +80,7 @@ const Room = () => {
   }
 
   return (
-    <section className="room">
+    <section className="room" onClick={() => {setCanPlayAudio(true)}}>
       <div className="room__board">
         {timer && <span className="room__board-timer">{timer}</span>}
         <div className="room__users-overflow">

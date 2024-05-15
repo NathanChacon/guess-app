@@ -1,7 +1,6 @@
 
-import { useEffect, useRef, useState, Dispatch, SetStateAction } from "react";
+import { useEffect, useState } from "react";
 import { socket } from "../../../socket";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
 const useTimer = () => {
     const [timer, setTimer] = useState(40);
 

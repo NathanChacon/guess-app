@@ -1,7 +1,5 @@
 import { useEffect, useState, Dispatch, SetStateAction } from "react";
 import { socket } from "../../../socket";
-import userJoinAudio from '../../../audios/user_enter.mp3';
-import userLeaveAudio from '../../../audios/user_leave.mp3';
 type User = {
   name: string;
   roomId: string | null;
@@ -15,24 +13,18 @@ type Message = {
   variant: "common" | "success" | "error";
 };
 
+type Props = {
+  setMessages:  Dispatch<SetStateAction<Array<Message>>>;
+  userLeaveSound: () => void
+  userJoinSound: () => void
+}
+
 const useUsers = ({
   setMessages,
-}: {
-  setMessages: Dispatch<SetStateAction<Array<Message>>>;
-}) => {
+  userLeaveSound,
+  userJoinSound
+}: Props) => {
   const [users, setUsers] = useState<User[]>([]);
-
-  const userJoinSound = () => {
-    const audio = new Audio(userJoinAudio);
-    audio.volume=0.2
-    audio.play();
-  };
-
-  const userLeaveSound = () => {
-    const audio = new Audio(userLeaveAudio);
-    audio.volume=0.2
-    audio.play();
-  };
 
   useEffect(() => {
     socket.on("room:user-enter", (data: User) => {
@@ -96,9 +88,6 @@ const useUsers = ({
 
           return [...messages, message];
         });
-
-
-
     });
 
     return () => {

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, Dispatch, SetStateAction } from "react";
 import { socket } from "../../../socket";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import nextMatchAudio from '../../../audios/next_match.mp3';
 
 
 type User = {
@@ -17,12 +16,15 @@ type nextMatchData = {
   previousTopic: string
 }
 
+type Props = {
+  setUsers: Dispatch<SetStateAction<Array<User>>>;
+  nextMatchSound: () => void
+}
 
 const useRoom = ({
   setUsers,
-}: {
-  setUsers: Dispatch<SetStateAction<Array<User>>>;
-}) => {
+  nextMatchSound
+}: Props) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentPlayer, setCurrentPlayer] = useState<string | null>("");
   const [currentTopic, setCurrentTopic] = useState<string | null>("");
@@ -56,12 +58,6 @@ const useRoom = ({
       title: "Esse nome já está em uso :(",
       subtitle: "Escolha outro nome: ",
     },
-  };
-
-  const nextMatchSound = () => {
-    const audio = new Audio(nextMatchAudio);
-    audio.volume=0.3
-    audio.play();
   };
 
   const handleErrors = (status: number) => {
