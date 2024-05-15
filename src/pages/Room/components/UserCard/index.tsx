@@ -1,37 +1,12 @@
 import "./style.css";
 import cat from "../../../../images/avatars/cat.png";
 
-type elipseProps = {
-  width: number;
-  height: number;
-};
-
-type userProps = {
+type Props = {
   name: string;
   points: number;
 };
 
-const EllipseImage = ({ width, height }: elipseProps) => {
-  const viewBox = `0 0 ${width} ${height}`;
-  const radiusX = width / 2;
-  const radiusY = height / 2;
-  const cx = radiusX;
-  const cy = radiusY;
-
-  return (
-    <svg
-      className="user-card__image"
-      width={width}
-      height={height}
-      viewBox={viewBox}
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <ellipse cx={cx} cy={cy} rx={radiusX} ry={radiusY} fill="white" />
-    </svg>
-  );
-};
-
-const UserCard = ({ name, points }: userProps) => {
+const UserCard: React.FC<Props> = ({ name, points }) => {
   return (
     <div className="user-card">
       <div className="user-card__image">

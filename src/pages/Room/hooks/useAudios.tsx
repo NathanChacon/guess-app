@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 
 const useAudios = () => {
-    const [canPlayAudio, setCanPlayAudio] = useState(false)
+    const [canPlayAudio, setCanPlayAudio] = useState<boolean>(false)
 
     const playAudio = (audioMedia: string) => {
         setCanPlayAudio((canPlay) => {

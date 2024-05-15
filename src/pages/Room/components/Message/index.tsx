@@ -1,8 +1,8 @@
-type messageProps = {
+type Props = {
   text: string;
   variant: "common" | "success" | "error";
 };
-const Message = ({ text, variant }: messageProps) => {
+const Message: React.FC<Props> = ({ text, variant }) => {
   const colorMap = {
     common: "white",
     info: "#6b0087",

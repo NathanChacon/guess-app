@@ -6,7 +6,7 @@ type WarningProps = {
   onClick: () => void;
 };
 
-const Warning = ({ title, subtitle, onClick }: WarningProps) => {
+const Warning:React.FC<WarningProps> = ({ title, subtitle, onClick }) => {
   return (
     <div className="warning">
       <div className="warning__card">

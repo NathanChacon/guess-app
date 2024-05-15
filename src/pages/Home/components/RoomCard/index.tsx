@@ -6,7 +6,7 @@ type RoomCard = {
   onClick: () => void;
 };
 
-const RoomCard = ({ title, description, onClick = () => {} }: RoomCard) => {
+const RoomCard: React.FC<RoomCard> = ({ title, description, onClick = () => {} }) => {
   return (
     <div className="room-card" onClick={onClick}>
       <h3 className="room-card__title">{title}</h3>

@@ -7,7 +7,7 @@ interface Props {
   // any props that come into the component
 }
 
-const CustomScrollbar = ({ children, scrollRef }: Props) => {
+const CustomScrollbar: React.FC<Props> = ({ children, scrollRef }) => {
   return (
     <Scrollbars style={{ width: "100%", height: "100%" }} ref={scrollRef}>
       {children}
