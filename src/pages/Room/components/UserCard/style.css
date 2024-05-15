@@ -41,8 +41,8 @@
   }
 
   .user-card__image {
-    width: 40px; /* Set the initial width */
-    height: 40px; /* Set the initial height */
+    width: 50px; /* Set the initial width */
+    height: 50px; /* Set the initial height */
   }
 
   .user-card__info {
