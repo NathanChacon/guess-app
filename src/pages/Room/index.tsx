@@ -34,7 +34,7 @@ const Room = () => {
 
   const getPlaceHolderText = () => {
     if (isWaitingMoreUsers || !isPlaying) {
-      return "Espere sua vez para escrever aqui : )";
+      return "Espere sua vez para escrever aqui :)";
     }
 
     return "Descreva seu tópico...";
