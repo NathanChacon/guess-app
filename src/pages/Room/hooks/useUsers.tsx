@@ -1,4 +1,4 @@
-import { useEffect, useState, Dispatch, SetStateAction } from "react";
+import { useEffect, useState} from "react";
 import { socket } from "../../../socket";
 type User = {
   name: string;
@@ -8,34 +8,19 @@ type User = {
   id: string;
 };
 
-type Message = {
-  text: string;
-  variant: "common" | "success" | "error";
-};
-
 type Props = {
-  setMessages:  Dispatch<SetStateAction<Array<Message>>>;
   userLeaveSound: () => void
   userJoinSound: () => void
 }
 
 const useUsers = ({
-  setMessages,
   userLeaveSound,
   userJoinSound
 }: Props) => {
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    socket.on("room:user-enter", (data: User) => {
-      setMessages((messages: any) => {
-        const message = {
-          text: `${data.name} entrou na sala`,
-          variant: "info",
-        };
-        return [...messages, message];
-      });
-      
+    socket.on("room:user-enter", (data: User) => {      
       setUsers((users) => {
         if (!users.some((user) => user.id === data.id)) {
           return [...users, data];
@@ -48,15 +33,6 @@ const useUsers = ({
     });
 
     socket.on("room:user-leave", (data: User) => {
-      const message = {
-        text: `${data.name} saiu da sala`,
-        variant: "info",
-      };
-
-      setMessages((messages: any) => {
-        return [...messages, message];
-      });
-
       setUsers((users) => {
         const filteredUsers = users.filter((user) => user.id !== data.id);
 
@@ -78,16 +54,6 @@ const useUsers = ({
           }
           return [...users]
         } )
-
-
-        setMessages((messages: any) => {
-          const message = {
-            text: `${user.name} acertou!`,
-            variant: "success",
-          };
-
-          return [...messages, message];
-        });
     });
 
     return () => {

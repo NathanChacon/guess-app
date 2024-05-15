@@ -18,9 +18,9 @@ const Room = () => {
 
   const [currentMessage, setCurrentMessage] = useState("");
 
-  const { messages, setMessages, chatContainerRef } = useMessages();
+  const { messages, isMessageDisabled, chatContainerRef } = useMessages();
 
-  const { users, setUsers } = useUsers({ setMessages, userLeaveSound, userJoinSound });
+  const { users, setUsers } = useUsers({userLeaveSound, userJoinSound });
 
   const isWaitingMoreUsers = users?.length <= 1;
   const {
@@ -134,7 +134,8 @@ const Room = () => {
             </ul>
             <input
               type={"text"}
-              placeholder={"escreva aqui..."}
+              disabled={isMessageDisabled}
+              placeholder={!isMessageDisabled ? "escreva aqui..." : "Você acertou!"}
               value={currentMessage}
               onChange={handleMessageChange}
               className="room__chat-input"
