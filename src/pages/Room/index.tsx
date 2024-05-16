@@ -1,24 +1,19 @@
-import { useState } from "react";
 import UserCard from "./components/UserCard";
 import { useParams } from "react-router-dom";
 import { socket } from "../../socket";
-import "./style.css";
-import Message from "./components/Message";
-import useMessages from "./hooks/useMessages";
 import useUsers from "./hooks/useUsers";
 import useRoom from "./hooks/useRoom";
 import UserNameModal from "./components/UserNameModal";
 import useTimer from "./hooks/useTimer";
 import ProgressBar from "./components/ProgressBar";
-import CustomScrollbar from "../../components/CustomScrollbar";
 import useAudios from "./hooks/useAudios";
+import Chat from "./components/Chat";
+
+import "./style.css";
+
 const Room = () => {
   const { roomId } = useParams();
   const {nextMatchSound, userJoinSound, userLeaveSound, setCanPlayAudio} = useAudios()
-
-  const [currentMessage, setCurrentMessage] = useState("");
-
-  const { messages, isMessageDisabled, chatContainerRef } = useMessages();
 
   const { users, setUsers } = useUsers({userLeaveSound, userJoinSound });
 
@@ -44,36 +39,8 @@ const Room = () => {
     return "Descreva seu tópico...";
   };
 
-  const getGuesserFieldPlaceHolder = () => {
-    if(isPlaying){
-      return "Sua vez!"
-    }
-
-    if (isMessageDisabled) {
-      return "Você acertou!";
-    }
-
-
-    return "Escreva aqui...";
-  };
-
   const writerPlaceholder = getWriterFieldPlaceHolder();
 
-  const handleMessageChange = (event: any) => {
-    setCurrentMessage(event.target.value);
-  };
-
-  const handleSendMessage = () => {
-    socket.emit("room:chat", { roomId, message: currentMessage });
-
-    setCurrentMessage("");
-  };
-
-  const handleOnKeyDown = (e: any) => {
-    if (e.key === "Enter") {
-      handleSendMessage();
-    }
-  };
 
   const onDescriptionChange = (event: any) => {
     const description = event.target.value;
@@ -133,28 +100,7 @@ const Room = () => {
             <ProgressBar percentage={percentage} />
           </div>
 
-          <div className="room__chat">
-            <ul className="room__chat-messages">
-              <CustomScrollbar scrollRef={chatContainerRef}>
-                {messages.map(({ text, variant }, index) => {
-                  return (
-                    <li key={index}>
-                      <Message text={text} variant={variant} />
-                    </li>
-                  );
-                })}
-              </CustomScrollbar>
-            </ul>
-            <input
-              type={"text"}
-              disabled={isMessageDisabled || isPlaying}
-              placeholder={getGuesserFieldPlaceHolder()}
-              value={currentMessage}
-              onChange={handleMessageChange}
-              className="room__chat-input"
-              onKeyDown={handleOnKeyDown}
-            />
-          </div>
+          <Chat isPlaying={isPlaying}></Chat>
         </div>
       </div>
     </section>
