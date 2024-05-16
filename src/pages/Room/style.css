@@ -88,11 +88,23 @@
   font-size: 20px;
 }
 
-.room__play textarea:disabled{
+/* Standard */
+.room__play textarea:disabled {
   color: white;
 }
 
-.room__play textarea:disabled::placeholder{
+/* Standard */
+.room__play textarea:disabled::placeholder {
+  color: white;
+}
+
+/* Firefox */
+.room__play textarea:disabled:-moz-placeholder {
+  color: white;
+}
+
+/* Firefox */
+.room__play textarea:disabled::-moz-placeholder {
   color: white;
 }
 
