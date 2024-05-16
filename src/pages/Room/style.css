@@ -88,8 +88,11 @@
   font-size: 20px;
 }
 
-.room__play textarea:disabled,
-.room__play textarea:disabled::placeholder {
+.room__play textarea:disabled{
+  color: white;
+}
+
+.room__play textarea:disabled::placeholder{
   color: white;
 }
 
@@ -126,15 +129,18 @@
 
 @media screen and (max-width: 1024px) {
   .room {
-    display: block;
-    padding: 10px 10px 28px 10px;
+    padding: 10px;
     height: none;
     min-height: 100vh;
   }
 
+  .room__writer-section{
+    padding-bottom: 30px;
+  }
+
   .room__board {
     width: 100%;
-    height: 100%;
+    height: auto;
     border-radius: 59px;
     padding: 20px;
     flex-direction: column;
