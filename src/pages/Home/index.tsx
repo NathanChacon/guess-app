@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import api from "../../axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import RoomCard from "./components/RoomCard";
@@ -6,6 +6,7 @@ import Warning from "./components/Warning";
 import { socket } from "../../socket";
 import CustomScrollbar from "../../components/CustomScrollbar";
 import "./style.css";
+import RoomList from "./components/RoomList";
 
 type Room = {
   title: string;
@@ -17,39 +18,41 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [rooms, setRooms] = useState<Room[]>([]);
-  const [userName, setUserName] = useState("");
-  const [userNameError, setUserNameError] = useState<String | null>(null);
+  const [userName, setUserName] = useState<string>("");
   const isRoomFullError = location?.state?.isRoomFull;
-
+  const [hasTouchedInput, setHasTouchedInput] = useState(false)
   const [isWarningVisible, setIsWarningVisible] = useState(isRoomFullError);
   const [isNameWarningVisible, setIsNameWarningVisible] = useState(false);
 
-  const handleUserNameErrors = (userName: string) => {
+  const handleUserNameErrors = () => {
     var specialCharacters = /[!@#$%^&*(),.?":{}|<>]/;
     // Check if username is not empty
-    if (userName.trim() === "") {
-      setUserNameError("Campo obrigatório");
-    }
+      if (userName.trim() === "") {
+        return "Campo obrigatório"
+      }
 
-    // Check if userName has more than 10 characters
-    else if (userName.length > 10) {
-      setUserNameError("Máximo de 10 caracteres");
-    }
+      // Check if userName has more than 10 characters
+      else if (userName.length > 10) {
+        return "Máximo de 10 caracteres"
+      }
 
-    // Check if userName contains special characters
-    else if (specialCharacters.test(userName)) {
-      setUserNameError("Seu nick deve pode conter apenas letras e dígitos");
-    }
+      // Check if userName contains special characters
+      else if (specialCharacters.test(userName)) {
+        return "Seu nick deve pode conter apenas letras e dígitos"
+      }
 
-    // Check if userName contains empty spaces
-    else if (/\s/.test(userName)) {
-      setUserNameError("Seu nick deve pode conter apenas letras e dígitos");
-    } else {
-      setUserNameError(null);
-    }
-
+      // Check if userName contains empty spaces
+      else if (/\s/.test(userName)) {
+        return "Seu nick deve pode conter apenas letras e dígitos"
+      } 
+      else {
+        return null
+      }
     // If all checks pass, userName is valid
   };
+
+  const userNameError = hasTouchedInput && handleUserNameErrors()
+  const isUserNameValid = !userNameError && !!userName
 
   useEffect(() => {
     api.get("/rooms").then((res): void => {
@@ -57,18 +60,20 @@ const Home: React.FC = () => {
     });
   }, []);
 
-  const handleJoinRoom = (roomId: string) => {
-    if (!userNameError && userName) {
+  const handleJoinRoom = useCallback((roomId: string) => {
+    if (isUserNameValid) {
       navigate(`rooms/${roomId}`, { state: { userName } });
     } else {
       setIsNameWarningVisible(true);
     }
-  };
+  }, [isUserNameValid, userName])
 
   const handleUserNameChange = (event: any) => {
+    if(!hasTouchedInput){
+      setHasTouchedInput(true)
+    }
+    
     setUserName(event.target.value);
-
-    handleUserNameErrors(event.target.value);
   };
 
   const handleWarning = () => {
@@ -104,17 +109,7 @@ const Home: React.FC = () => {
           </div>
           <div className="home__room-section">
             <h1 className="home__room-title">Salas:</h1>
-            <ul className="home__room-list">
-              {rooms.map((room) => (
-                <li className="home__room-list-item" key={room.id}>
-                  <RoomCard
-                    title={room.title}
-                    description={`Jogadores: ${room.players}/5`}
-                    onClick={() => handleJoinRoom(room.id)}
-                  />
-                </li>
-              ))}
-            </ul>
+            <RoomList rooms={rooms} handleJoinRoom={handleJoinRoom} />
           </div>
         </div>
 
