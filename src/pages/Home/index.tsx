@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import api from "../../axios";
 import { useNavigate, useLocation } from "react-router-dom";
-import RoomCard from "./components/RoomCard";
 import Warning from "./components/Warning";
 import { socket } from "../../socket";
 import CustomScrollbar from "../../components/CustomScrollbar";
@@ -12,6 +11,10 @@ type Room = {
   title: string;
   id: string;
   players: number;
+};
+
+interface IRoomRequest {
+    rooms: Array<Room>
 };
 
 const Home: React.FC = () => {
@@ -55,7 +58,7 @@ const Home: React.FC = () => {
   const isUserNameValid = !userNameError && !!userName
 
   useEffect(() => {
-    api.get("/rooms").then((res): void => {
+    api.get<IRoomRequest>("/rooms").then((res): void => {
       setRooms(res.data.rooms);
     });
   }, []);
