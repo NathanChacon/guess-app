@@ -10,6 +10,7 @@ import useAudios from "./hooks/useAudios";
 import Chat from "./components/Chat";
 
 import "./style.css";
+import CustomScrollbar from "../../components/CustomScrollbar";
 
 const Room = () => {
   const { roomId } = useParams();
@@ -64,15 +65,17 @@ const Room = () => {
       <div className="room__board">
         {timer && <span className="room__board-timer">{timer}</span>}
         <div className="room__users-overflow">
-          <ul className="room__users">
-            {users.map(({ id, points, name }) => {
-              return (
-                <li className="room__user" key={id}>
-                  <UserCard name={name} points={points} />
-                </li>
-              );
-            })}
-          </ul>
+          <CustomScrollbar>
+            <ul className="room__users">
+              {users.map(({ id, points, name }) => {
+                return (
+                  <li className="room__user" key={id}>
+                    <UserCard name={name} points={points} />
+                  </li>
+                );
+              })}
+            </ul>
+          </CustomScrollbar>
         </div>
 
         <div className="room__play-area">

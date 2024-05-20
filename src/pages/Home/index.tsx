@@ -11,11 +11,39 @@ type Room = {
   title: string;
   id: string;
   players: number;
+  maxPlayers: number;
 };
 
 interface IRoomRequest {
     rooms: Array<Room>
 };
+
+
+class Banana {
+  isTaty(): boolean {
+      return true
+  }
+}
+
+class Orange {
+  isJuicy(): boolean {
+      return true
+  }
+}
+
+type Fruit = Banana | Orange
+
+const getFruitStatus = (fruit: Fruit) => {
+  if(fruit instanceof Orange){
+    return fruit.isJuicy()
+  }
+
+  fruit.isTaty()
+}
+
+const isBanana = (fruit: Fruit): fruit is Banana  => {
+    return fruit instanceof Banana
+}
 
 const Home: React.FC = () => {
   const navigate = useNavigate();

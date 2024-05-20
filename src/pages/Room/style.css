@@ -139,6 +139,10 @@
   font-size: 18px;
 }
 
+.room__users-overflow {
+  width: 300px;
+}
+
 @media screen and (max-width: 1024px) {
   .room {
     padding: 10px;
@@ -161,8 +165,6 @@
   .room__users {
     display: flex;
     align-items: start;
-    overflow-y: hidden;
-    overflow-x: auto;
     margin-bottom: 10px;
   }
 
@@ -195,9 +197,8 @@
   }
 
   .room__users-overflow {
-    overflow-y: hidden;
-    overflow-x: auto;
-    padding-bottom: 10px;
+      width: 100%;
+      height: 120px;
   }
 
   .room__chat-input {

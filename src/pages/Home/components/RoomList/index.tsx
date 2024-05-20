@@ -5,6 +5,7 @@ type Room = {
     title: string;
     id: string;
     players: number;
+    maxPlayers: number;
 };
 
 
@@ -20,7 +21,7 @@ const  RoomList = ({rooms, handleJoinRoom}: Props) => {
           <li className="home__room-list-item" key={room.id}>
             <RoomCard
               title={room.title}
-              description={`Jogadores: ${room.players}/5`}
+              description={`Jogadores: ${room.players}/${room.maxPlayers}`}
               onClick={() => handleJoinRoom(room.id)}
             />
           </li>
