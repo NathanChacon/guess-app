@@ -20,7 +20,7 @@ const useUsers = ({
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    socket.on("room:user-enter", (data: User) => {      
+    socket.on("room:user-enter", (data: User) => {  
       setUsers((users) => {
         if (!users.some((user) => user.id === data.id)) {
           return [...users, data];

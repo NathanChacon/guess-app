@@ -92,11 +92,6 @@ const useMessages = () => {
     });
 
     return () => {
-      socket.off("room:chat");
-      socket.off("room:next-match");
-      socket.off("room:score");
-      socket.off("room:user-enter")
-      socket.off("room:user-leave")
     };
   }, []);
 
