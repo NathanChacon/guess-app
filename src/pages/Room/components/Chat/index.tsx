@@ -71,4 +71,4 @@ const Chat = ({isPlaying}: Props) => {
 };
 
 
-export default Chat
+export default React.memo(Chat) 
